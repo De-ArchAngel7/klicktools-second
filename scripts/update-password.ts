@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import bcrypt from "bcryptjs";
+const bcrypt = require("bcryptjs");
 import { getUsersCollection } from "../lib/db";
 
 // Load environment variables first

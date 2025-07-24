@@ -2,8 +2,8 @@ import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
 import { getUsersCollection } from "@/lib/db";
+const bcrypt = require("bcryptjs");
 
 export const authOptions: NextAuthOptions = {
   providers: [

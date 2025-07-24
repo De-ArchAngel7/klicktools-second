@@ -1,7 +1,8 @@
-import { getToolsCollection, getUsersCollection } from "./db";
+import { MongoClient } from "mongodb";
+import { getUsersCollection, getToolsCollection } from "./db";
 import { createTool } from "./models/Tool";
 import { createUser } from "./models/User";
-import bcrypt from "bcryptjs";
+const bcrypt = require("bcryptjs");
 
 const initialTools = [
   // Chat & Language Models

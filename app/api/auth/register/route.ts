@@ -1,6 +1,7 @@
+const bcrypt = require("bcryptjs");
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 import { getUsersCollection } from "@/lib/db";
+import { sign } from "jsonwebtoken";
 import { createUser } from "@/lib/models/User";
 
 export async function POST(request: NextRequest) {

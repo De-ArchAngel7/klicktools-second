@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
+const bcrypt = require("bcryptjs");
 import { getUsersCollection } from "@/lib/db";
 
 export async function POST(request: NextRequest) {

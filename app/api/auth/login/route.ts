@@ -1,7 +1,7 @@
+const bcrypt = require("bcryptjs");
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { getUsersCollection } from "@/lib/db";
+import { sign } from "jsonwebtoken";
 
 export async function POST(request: NextRequest) {
   try {
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     );
 
     // Generate JWT token
-    const token = jwt.sign(
+    const token = sign(
       {
         userId: user._id,
         email: user.email,

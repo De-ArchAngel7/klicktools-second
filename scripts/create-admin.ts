@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import bcrypt from "bcryptjs";
+const bcrypt = require("bcryptjs");
 import dotenv from "dotenv";
 
 // Load environment variables

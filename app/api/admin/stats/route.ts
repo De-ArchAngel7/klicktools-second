@@ -73,7 +73,11 @@ export async function GET(request: NextRequest) {
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-    const monthlyGrowth = [];
+    const monthlyGrowth: Array<{
+      month: string;
+      tools: number;
+      users: number;
+    }> = [];
     for (let i = 5; i >= 0; i--) {
       const startDate = new Date();
       startDate.setMonth(startDate.getMonth() - i);
