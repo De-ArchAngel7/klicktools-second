@@ -1,0 +1,22 @@
+{
+  "/_not-found": "app/_not-found.js",
+  "/api/admin/create-user/route": "app/api/admin/create-user/route.js",
+  "/api/admin/tools/[id]/route": "app/api/admin/tools/[id]/route.js",
+  "/api/admin/stats/route": "app/api/admin/stats/route.js",
+  "/api/auth/register/route": "app/api/auth/register/route.js",
+  "/api/admin/tools/route": "app/api/admin/tools/route.js",
+  "/api/admin/update-password/route": "app/api/admin/update-password/route.js",
+  "/api/favorites/route": "app/api/favorites/route.js",
+  "/api/admin/users/route": "app/api/admin/users/route.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/categories/route": "app/api/categories/route.js",
+  "/api/reviews/route": "app/api/reviews/route.js",
+  "/api/tools/route": "app/api/tools/route.js",
+  "/api/user/reviews/route": "app/api/user/reviews/route.js",
+  "/auth/signin/page": "app/auth/signin/page.js",
+  "/api/user/favorites/route": "app/api/user/favorites/route.js",
+  "/page": "app/page.js",
+  "/auth/signup/page": "app/auth/signup/page.js",
+  "/dashboard/page": "app/dashboard/page.js"
+}
