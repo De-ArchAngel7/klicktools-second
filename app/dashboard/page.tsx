@@ -223,10 +223,18 @@ export default function Dashboard() {
           fetchAdminStats();
         }
       } else {
-        alert("❌ Error creating user: " + data.error);
+        // Show specific error message based on status code
+        if (response.status === 409) {
+          alert(
+            "❌ Error: A user with this email already exists. Please use a different email address."
+          );
+        } else {
+          alert("❌ Error creating user: " + (data.error || "Unknown error"));
+        }
       }
-    } catch (error) {
-      alert("❌ Error creating user: " + error);
+    } catch (error: any) {
+      console.error("Error creating user:", error);
+      alert("❌ Network error: Unable to connect to server. Please try again.");
     }
   };
 
@@ -1102,6 +1110,8 @@ export default function Dashboard() {
                     })
                   }
                   className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white"
+                  aria-label="Select user role"
+                  title="Select user role"
                 >
                   <option value="user">User</option>
                   <option value="admin">Admin</option>
