@@ -147,15 +147,23 @@ export default function Dashboard() {
 
       if (response.ok) {
         alert(
-          `✅ Password updated successfully!\n\nLogin Credentials:\nEmail: ${updatePasswordData.email}\nPassword: ${updatePasswordData.newPassword}`
+          `🔐 SUCCESS! Password Updated Successfully!\n\n📧 Email: ${updatePasswordData.email}\n🔑 New Password: ${updatePasswordData.newPassword}\n\n✅ The user can now login with the new password!`
         );
         setShowUpdatePasswordModal(false);
         setUpdatePasswordData({ email: "", newPassword: "" });
       } else {
-        alert("❌ Error updating password: " + data.error);
+        // Show specific error message based on status code
+        if (response.status === 404) {
+          alert("❌ Error: User not found. Please check the email address.");
+        } else {
+          alert(
+            "❌ Error updating password: " + (data.error || "Unknown error")
+          );
+        }
       }
-    } catch (error) {
-      alert("❌ Error updating password: " + error);
+    } catch (error: any) {
+      console.error("Error updating password:", error);
+      alert("❌ Network error: Unable to connect to server. Please try again.");
     }
   };
 
@@ -214,7 +222,7 @@ export default function Dashboard() {
 
       if (response.ok) {
         alert(
-          `✅ User created successfully!\n\nLogin Credentials:\nEmail: ${createUserData.email}\nPassword: ${createUserData.password}\nRole: ${createUserData.role}\n\nYou can now use these credentials to login!`
+          `🎉 SUCCESS! User Created Successfully!\n\n📧 Email: ${createUserData.email}\n🔑 Password: ${createUserData.password}\n👤 Role: ${createUserData.role}\n\n✅ The user can now login with these credentials!`
         );
         setShowCreateUserModal(false);
         setCreateUserData({ name: "", email: "", password: "", role: "user" });

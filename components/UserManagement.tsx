@@ -110,13 +110,15 @@ export default function UserManagement() {
       });
 
       if (response.ok) {
+        alert(`✅ User role updated successfully to ${newRole}!`);
         fetchUsers();
       } else {
         const error = await response.json();
-        alert("Error updating role: " + error.error);
+        alert("❌ Error updating role: " + error.error);
       }
     } catch (error) {
       console.error("Error updating role:", error);
+      alert("❌ Network error: Unable to update user role. Please try again.");
     }
   };
 
@@ -131,13 +133,15 @@ export default function UserManagement() {
       });
 
       if (response.ok) {
+        alert("✅ User deleted successfully!");
         fetchUsers();
       } else {
         const error = await response.json();
-        alert("Error deleting user: " + error.error);
+        alert("❌ Error deleting user: " + error.error);
       }
     } catch (error) {
       console.error("Error deleting user:", error);
+      alert("❌ Network error: Unable to delete user. Please try again.");
     }
   };
 
@@ -152,15 +156,25 @@ export default function UserManagement() {
       const data = await response.json();
 
       if (response.ok) {
-        alert("✅ User created successfully!");
+        alert(
+          `🎉 SUCCESS! User Created Successfully!\n\n📧 Email: ${createForm.email}\n🔑 Password: ${createForm.password}\n👤 Role: ${createForm.role}\n\n✅ The user can now login with these credentials!`
+        );
         setShowCreateModal(false);
         setCreateForm({ name: "", email: "", password: "", role: "user" });
         fetchUsers();
       } else {
-        alert("❌ Error creating user: " + data.error);
+        // Show specific error message based on status code
+        if (response.status === 409) {
+          alert(
+            "❌ Error: A user with this email already exists. Please use a different email address."
+          );
+        } else {
+          alert("❌ Error creating user: " + (data.error || "Unknown error"));
+        }
       }
-    } catch (error) {
-      alert("❌ Error creating user: " + error);
+    } catch (error: any) {
+      console.error("Error creating user:", error);
+      alert("❌ Network error: Unable to connect to server. Please try again.");
     }
   };
 
