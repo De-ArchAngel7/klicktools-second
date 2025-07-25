@@ -167,14 +167,18 @@ export default function Dashboard() {
 
   const handleCreateNewAdmin = async () => {
     try {
+      // Generate a random email to avoid conflicts
+      const randomId = Math.random().toString(36).substring(2, 8);
+      const email = `admin${randomId}@klicktools.com`;
+
       const response = await fetch("/api/admin/create-user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: "Heylel Admin",
-          email: "heylelyaka@gmail.com",
+          name: "New Admin User",
+          email: email,
           password: "admin123456",
           role: "admin",
         }),
@@ -184,7 +188,7 @@ export default function Dashboard() {
 
       if (response.ok) {
         alert(
-          "✅ New admin user created successfully!\n\nLogin Credentials:\nEmail: heylelyaka@gmail.com\nPassword: admin123456\n\nYou can now use these credentials to login!"
+          `✅ New admin user created successfully!\n\nLogin Credentials:\nEmail: ${email}\nPassword: admin123456\n\nYou can now use these credentials to login!`
         );
       } else {
         alert("❌ Error creating user: " + data.error);
