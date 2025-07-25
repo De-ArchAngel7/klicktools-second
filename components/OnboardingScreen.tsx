@@ -26,6 +26,16 @@ export default function OnboardingScreen({
   const backgroundRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Check if all refs are available
+    if (
+      !containerRef.current ||
+      !titleRef.current ||
+      !subtitleRef.current ||
+      !backgroundRef.current
+    ) {
+      return;
+    }
+
     // GSAP Timeline for amazing animations
     const tl = gsap.timeline();
 
@@ -93,34 +103,38 @@ export default function OnboardingScreen({
 
     // Particle animations
     particlesRef.current.forEach((particle, index) => {
-      gsap.set(particle, {
-        opacity: 0,
-        scale: 0,
-        rotation: Math.random() * 360,
-      });
+      if (particle) {
+        gsap.set(particle, {
+          opacity: 0,
+          scale: 0,
+          rotation: Math.random() * 360,
+        });
 
-      gsap.to(particle, {
-        opacity: 1,
-        scale: 1,
-        rotation: `+=${Math.random() * 720 - 360}`,
-        duration: 1.5,
-        ease: "back.out(1.7)",
-        delay: 2 + index * 0.1,
-      });
+        gsap.to(particle, {
+          opacity: 1,
+          scale: 1,
+          rotation: `+=${Math.random() * 720 - 360}`,
+          duration: 1.5,
+          ease: "back.out(1.7)",
+          delay: 2 + index * 0.1,
+        });
+      }
     });
 
     // Floating animation for particles
     particlesRef.current.forEach((particle, index) => {
-      gsap.to(particle, {
-        y: `-=${Math.random() * 100 + 50}`,
-        x: `+=${Math.random() * 200 - 100}`,
-        rotation: `+=${Math.random() * 360}`,
-        duration: 3 + Math.random() * 2,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut",
-        delay: 4 + index * 0.2,
-      });
+      if (particle) {
+        gsap.to(particle, {
+          y: `-=${Math.random() * 100 + 50}`,
+          x: `+=${Math.random() * 200 - 100}`,
+          rotation: `+=${Math.random() * 360}`,
+          duration: 3 + Math.random() * 2,
+          repeat: -1,
+          yoyo: true,
+          ease: "power1.inOut",
+          delay: 4 + index * 0.2,
+        });
+      }
     });
 
     // Glowing orb animations

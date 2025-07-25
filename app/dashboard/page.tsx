@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useSession, signOut, signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   User,
@@ -24,6 +25,7 @@ import {
   Shield,
   ArrowLeft,
   Home,
+  Lock,
 } from "lucide-react";
 import { hasRole } from "@/lib/utils";
 import AddToolModal from "@/components/AddToolModal";
@@ -43,6 +45,7 @@ interface DashboardStats {
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("overview");
   const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -51,14 +54,22 @@ export default function Dashboard() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingTool, setEditingTool] = useState<ToolType | null>(null);
 
+  // Redirect unauthenticated users
   useEffect(() => {
+    if (status === "loading") return; // Still loading
+
+    if (status === "unauthenticated") {
+      router.push("/auth/signin?callbackUrl=/dashboard");
+      return;
+    }
+
     if (session?.user) {
       fetchUserData();
       if (hasRole(session.user, "admin")) {
         fetchAdminStats();
       }
     }
-  }, [session]);
+  }, [session, status, router]);
 
   const fetchUserData = async () => {
     try {
@@ -210,27 +221,64 @@ export default function Dashboard() {
     fetchAdminStats(); // Refresh stats after changes
   };
 
-  if (status === "loading" || isLoading) {
+  if (status === "loading") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
-          <p className="text-cyan-400">Loading dashboard...</p>
+          <p className="text-cyan-400 text-lg">Checking authentication...</p>
+          <p className="text-gray-400 text-sm mt-2">
+            Please wait while we verify your login status
+          </p>
         </div>
       </div>
     );
   }
 
-  if (!session) {
+  if (status === "unauthenticated") {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Lock className="w-8 h-8 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-4">
+            Authentication Required
+          </h2>
+          <p className="text-gray-300 mb-6">
+            You need to be logged in to access your dashboard. Please sign in to
+            continue.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              onClick={() => signIn()}
+              className="flex items-center justify-center space-x-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white rounded-lg transition-all duration-200 font-medium"
+            >
+              <User className="w-4 h-4" />
+              <span>Sign In</span>
+            </button>
+            <a
+              href="/"
+              className="flex items-center justify-center space-x-2 px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all duration-200 border border-white/20"
+            >
+              <Home className="w-4 h-4" />
+              <span>Go to Home</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-white mb-4">
-            Please sign in to access your dashboard
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
+          <p className="text-cyan-400 text-lg">Loading your dashboard...</p>
+          <p className="text-gray-400 text-sm mt-2">
+            Fetching your data and preferences
           </p>
-          <a href="/" className="text-cyan-400 hover:text-cyan-300">
-            Go to Home
-          </a>
         </div>
       </div>
     );

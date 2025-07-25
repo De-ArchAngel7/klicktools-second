@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn, getSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, Github, Chrome } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function SignIn() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -16,6 +17,9 @@ export default function SignIn() {
     password: "",
   });
   const [error, setError] = useState("");
+
+  // Get the callback URL from search params
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +36,7 @@ export default function SignIn() {
       if (result?.error) {
         setError("Invalid email or password");
       } else {
-        router.push("/");
+        router.push(callbackUrl);
       }
     } catch (error) {
       setError("An error occurred. Please try again.");
@@ -44,7 +48,7 @@ export default function SignIn() {
   const handleSocialSignIn = async (provider: string) => {
     setIsLoading(true);
     try {
-      await signIn(provider, { callbackUrl: "/" });
+      await signIn(provider, { callbackUrl });
     } catch (error) {
       setError("An error occurred. Please try again.");
       setIsLoading(false);

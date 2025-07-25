@@ -7,6 +7,7 @@ export interface User {
   password?: string;
   role: "user" | "admin";
   image?: string;
+  favorites?: any[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -20,6 +21,7 @@ export const createUser = (
 ): User => {
   return {
     ...userData,
+    favorites: [],
     createdAt: new Date(),
     updatedAt: new Date(),
   };

@@ -127,17 +127,17 @@ export default function AIToolCard({
       }
     >
       {/* Card Content */}
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         {/* Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center space-x-3 flex-1">
-            <div className="ai-tool-logo-container relative">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 space-y-3 sm:space-y-0">
+          <div className="flex items-start space-x-3 flex-1 min-w-0">
+            <div className="ai-tool-logo-container relative flex-shrink-0">
               {tool.logo ? (
                 <>
                   <img
                     src={tool.logo}
                     alt={tool.name}
-                    className="ai-tool-logo w-12 h-12 rounded-lg object-cover"
+                    className="ai-tool-logo w-10 h-10 sm:w-12 sm:h-12 rounded-lg object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.style.display = "none";
@@ -146,34 +146,34 @@ export default function AIToolCard({
                       );
                     }}
                   />
-                  <div className="ai-tool-logo-fallback ai-tool-logo-fallback-hidden w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+                  <div className="ai-tool-logo-fallback ai-tool-logo-fallback-hidden w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center text-white font-bold text-sm sm:text-lg">
                     {tool.name.charAt(0).toUpperCase()}
                   </div>
                 </>
               ) : (
-                <div className="ai-tool-logo-fallback w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+                <div className="ai-tool-logo-fallback w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center text-white font-bold text-sm sm:text-lg">
                   {tool.name.charAt(0).toUpperCase()}
                 </div>
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-semibold text-white truncate group-hover:text-cyan-300 transition-colors">
+              <h3 className="text-base sm:text-lg font-semibold text-white group-hover:text-cyan-300 transition-colors break-words leading-tight">
                 {tool.name}
               </h3>
-              <p className="text-gray-400 text-sm truncate">
+              <p className="text-gray-400 text-xs sm:text-sm mt-1 line-clamp-2 leading-relaxed">
                 {tool.description}
               </p>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center space-x-2 ml-4">
+          <div className="flex items-center justify-end space-x-2 sm:ml-4">
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleFavoriteToggle}
               disabled={isLoading}
-              className={`p-2 rounded-lg transition-all duration-200 ${
+              className={`p-1.5 sm:p-2 rounded-lg transition-all duration-200 ${
                 isFavorited
                   ? "bg-red-500/20 text-red-400 border border-red-500/30"
                   : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-red-400 border border-white/10"
@@ -181,7 +181,9 @@ export default function AIToolCard({
               title={isFavorited ? "Remove from favorites" : "Add to favorites"}
             >
               <Heart
-                className={`w-4 h-4 ${isFavorited ? "fill-current" : ""}`}
+                className={`w-3 h-3 sm:w-4 sm:h-4 ${
+                  isFavorited ? "fill-current" : ""
+                }`}
               />
             </motion.button>
 
@@ -189,17 +191,17 @@ export default function AIToolCard({
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowReviewModal(true)}
-              className="p-2 rounded-lg bg-white/5 text-gray-400 hover:bg-white/10 hover:text-yellow-400 border border-white/10 transition-all duration-200"
+              className="p-1.5 sm:p-2 rounded-lg bg-white/5 text-gray-400 hover:bg-white/10 hover:text-yellow-400 border border-white/10 transition-all duration-200"
               title="Rate this tool"
             >
-              <Star className="w-4 h-4" />
+              <Star className="w-3 h-3 sm:w-4 sm:h-4" />
             </motion.button>
           </div>
         </div>
 
         {/* Tags and Category */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
+          <div className="flex flex-wrap gap-1 sm:gap-2">
             <span className="ai-tool-category-badge px-2 py-1 text-xs font-medium rounded-full">
               {tool.category}
             </span>
@@ -210,7 +212,7 @@ export default function AIToolCard({
             )}
           </div>
           <span
-            className={`px-2 py-1 text-xs font-medium rounded-full ${
+            className={`px-2 py-1 text-xs font-medium rounded-full self-start sm:self-auto ${
               tool.pricing === "Free"
                 ? "bg-green-500/20 text-green-400"
                 : tool.pricing === "Freemium"
@@ -223,7 +225,7 @@ export default function AIToolCard({
         </div>
 
         {/* Rating and Reviews */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
           <div className="flex items-center space-x-2">
             <div className="flex items-center space-x-1">
               {[...Array(5)].map((_, i) => (
@@ -237,18 +239,18 @@ export default function AIToolCard({
                 />
               ))}
             </div>
-            <span className="text-gray-400 text-sm">
+            <span className="text-gray-400 text-xs sm:text-sm">
               {tool.rating ? `${tool.rating.toFixed(1)}` : "No rating"}
             </span>
             {tool.reviewCount && tool.reviewCount > 0 && (
-              <span className="text-gray-500 text-sm">
+              <span className="text-gray-500 text-xs sm:text-sm">
                 ({tool.reviewCount} reviews)
               </span>
             )}
           </div>
 
           {userRating > 0 && (
-            <div className="flex items-center space-x-1">
+            <div className="flex items-center space-x-1 self-start sm:self-auto">
               <span className="text-cyan-400 text-xs">Your rating:</span>
               <div className="flex items-center space-x-1">
                 {[...Array(5)].map((_, i) => (
@@ -288,15 +290,15 @@ export default function AIToolCard({
         )}
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
             <motion.a
               href={tool.url}
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all duration-200 text-sm font-medium"
+              className="flex items-center justify-center space-x-2 px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all duration-200 text-sm font-medium"
             >
               <ExternalLink className="w-4 h-4" />
               <span>Visit Tool</span>
@@ -309,7 +311,7 @@ export default function AIToolCard({
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center space-x-2 px-3 py-2 bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white rounded-lg transition-all duration-200 text-sm"
+                className="flex items-center justify-center space-x-2 px-3 py-2 bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white rounded-lg transition-all duration-200 text-sm"
               >
                 <Eye className="w-4 h-4" />
                 <span>Website</span>
@@ -317,7 +319,7 @@ export default function AIToolCard({
             )}
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center justify-center sm:justify-end space-x-2">
             {tool.apiAvailable && (
               <span className="px-2 py-1 text-xs bg-cyan-500/20 text-cyan-400 rounded-full border border-cyan-500/30">
                 API

@@ -48,8 +48,11 @@ export default function Home() {
     );
 
   useEffect(() => {
-    // Force onboarding to show for testing - remove this later
-    setShowOnboarding(true);
+    // Check if user has seen onboarding before
+    const hasSeenOnboarding = localStorage.getItem("hasSeenOnboarding");
+    if (!hasSeenOnboarding) {
+      setShowOnboarding(true);
+    }
 
     fetchFeaturedTools();
     fetchCategories();
@@ -296,13 +299,13 @@ export default function Home() {
               >
                 <div className="bg-black/30 backdrop-blur-xl rounded-xl p-6 border border-white/10 shadow-2xl">
                   {/* Results Header */}
-                  <div className="flex items-center justify-between mb-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-4 sm:space-y-0">
                     <div>
                       <div className="flex items-center space-x-3 mb-2">
-                        <div className="w-8 h-8 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg flex items-center justify-center">
-                          <Search className="w-4 h-4 text-white" />
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg">
+                          <Search className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                         </div>
-                        <h2 className="text-2xl font-bold text-white">
+                        <h2 className="text-xl sm:text-2xl font-bold text-white">
                           Search Results
                           {searchQuery && (
                             <span className="text-gray-400 font-normal">
@@ -312,7 +315,7 @@ export default function Home() {
                           )}
                         </h2>
                       </div>
-                      <p className="text-gray-400 ml-11">
+                      <p className="text-gray-400 ml-11 sm:ml-12 text-sm sm:text-base">
                         {isSearching
                           ? "Searching..."
                           : `${searchResults.length} tools found`}
@@ -320,7 +323,7 @@ export default function Home() {
                     </div>
 
                     {/* Sort Options */}
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 self-start sm:self-auto">
                       <span className="text-gray-400 text-sm">Sort by:</span>
                       <select
                         value={sortBy}

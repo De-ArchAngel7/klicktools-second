@@ -13,6 +13,13 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status");
     const apiAvailable = searchParams.get("apiAvailable");
 
+    console.log("API: Fetching tools with params:", {
+      query,
+      category,
+      featured,
+      sort,
+    });
+
     const toolsCollection = await getToolsCollection();
     let filter: any = {};
 
@@ -74,13 +81,18 @@ export async function GET(request: NextRequest) {
         break;
     }
 
+    console.log("API: Executing database query...");
     const tools = await toolsCollection.find(filter).sort(sortOption).toArray();
+    console.log(`API: Found ${tools.length} tools`);
 
     return NextResponse.json(tools);
   } catch (error) {
     console.error("Error fetching tools:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        error: "Internal server error",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 }
     );
   }

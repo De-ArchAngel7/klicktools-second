@@ -92,12 +92,14 @@ export const authOptions: NextAuthOptions = {
               name: user.name || "",
               image: user.image || "",
               role: "user",
+              favorites: [],
               createdAt: new Date(),
               updatedAt: new Date(),
-            } as any);
+            });
           }
         } catch (error) {
           console.error("OAuth signin error:", error);
+          return false;
         }
       }
       return true;
