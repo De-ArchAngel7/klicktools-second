@@ -261,28 +261,19 @@ export default function Dashboard() {
               <User className="w-4 h-4" />
               <span>Sign In</span>
             </button>
-            <a
-              href="/"
-              className="flex items-center justify-center space-x-2 px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all duration-200 border border-white/20"
-            >
-              <Home className="w-4 h-4" />
-              <span>Go to Home</span>
-            </a>
           </div>
         </div>
       </div>
     );
   }
 
-  if (isLoading) {
+  // Ensure session exists before proceeding
+  if (!session || !session.user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
-          <p className="text-cyan-400 text-lg">Loading your dashboard...</p>
-          <p className="text-gray-400 text-sm mt-2">
-            Fetching your data and preferences
-          </p>
+          <p className="text-cyan-400 text-lg">Loading session...</p>
         </div>
       </div>
     );
