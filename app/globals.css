@@ -1103,3 +1103,14 @@ select option:checked {
   background-color: rgba(59, 130, 246, 0.8) !important;
   color: white !important;
 }
+
+/* Select dropdown styling classes */
+.select-dark {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  color: white !important;
+}
+
+.select-option-dark {
+  background-color: rgba(0, 0, 0, 0.9) !important;
+  color: white !important;
+}

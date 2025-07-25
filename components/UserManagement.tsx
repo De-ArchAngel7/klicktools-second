@@ -308,38 +308,16 @@ export default function UserManagement() {
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
-              className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 select-dark"
               aria-label="Filter users by role"
-              style={{
-                backgroundColor: "rgba(0, 0, 0, 0.8)",
-                color: "white",
-              }}
             >
-              <option
-                value=""
-                style={{
-                  backgroundColor: "rgba(0, 0, 0, 0.9)",
-                  color: "white",
-                }}
-              >
+              <option value="" className="select-option-dark">
                 All Roles
               </option>
-              <option
-                value="admin"
-                style={{
-                  backgroundColor: "rgba(0, 0, 0, 0.9)",
-                  color: "white",
-                }}
-              >
+              <option value="admin" className="select-option-dark">
                 Admins
               </option>
-              <option
-                value="user"
-                style={{
-                  backgroundColor: "rgba(0, 0, 0, 0.9)",
-                  color: "white",
-                }}
-              >
+              <option value="user" className="select-option-dark">
                 Users
               </option>
             </select>
@@ -413,29 +391,13 @@ export default function UserManagement() {
                         onChange={(e) =>
                           handleRoleChange(user._id, e.target.value)
                         }
-                        className="px-2 py-1 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                        className="px-2 py-1 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 select-dark"
                         aria-label={`Change role for ${user.name}`}
-                        style={{
-                          backgroundColor: "rgba(0, 0, 0, 0.8)",
-                          color: "white",
-                        }}
                       >
-                        <option
-                          value="user"
-                          style={{
-                            backgroundColor: "rgba(0, 0, 0, 0.9)",
-                            color: "white",
-                          }}
-                        >
+                        <option value="user" className="select-option-dark">
                           User
                         </option>
-                        <option
-                          value="admin"
-                          style={{
-                            backgroundColor: "rgba(0, 0, 0, 0.9)",
-                            color: "white",
-                          }}
-                        >
+                        <option value="admin" className="select-option-dark">
                           Admin
                         </option>
                       </select>
@@ -601,29 +563,13 @@ export default function UserManagement() {
                   onChange={(e) =>
                     setCreateForm((prev) => ({ ...prev, role: e.target.value }))
                   }
-                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 select-dark"
                   aria-label="Select user role"
-                  style={{
-                    backgroundColor: "rgba(0, 0, 0, 0.8)",
-                    color: "white",
-                  }}
                 >
-                  <option
-                    value="user"
-                    style={{
-                      backgroundColor: "rgba(0, 0, 0, 0.9)",
-                      color: "white",
-                    }}
-                  >
+                  <option value="user" className="select-option-dark">
                     User
                   </option>
-                  <option
-                    value="admin"
-                    style={{
-                      backgroundColor: "rgba(0, 0, 0, 0.9)",
-                      color: "white",
-                    }}
-                  >
+                  <option value="admin" className="select-option-dark">
                     Admin
                   </option>
                 </select>

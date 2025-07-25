@@ -1131,30 +1131,14 @@ export default function Dashboard() {
                       role: e.target.value as "user" | "admin",
                     })
                   }
-                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white"
+                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white select-dark"
                   aria-label="Select user role"
                   title="Select user role"
-                  style={{
-                    backgroundColor: "rgba(0, 0, 0, 0.8)",
-                    color: "white",
-                  }}
                 >
-                  <option
-                    value="user"
-                    style={{
-                      backgroundColor: "rgba(0, 0, 0, 0.9)",
-                      color: "white",
-                    }}
-                  >
+                  <option value="user" className="select-option-dark">
                     User
                   </option>
-                  <option
-                    value="admin"
-                    style={{
-                      backgroundColor: "rgba(0, 0, 0, 0.9)",
-                      color: "white",
-                    }}
-                  >
+                  <option value="admin" className="select-option-dark">
                     Admin
                   </option>
                 </select>
