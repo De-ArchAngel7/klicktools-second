@@ -1134,9 +1134,29 @@ export default function Dashboard() {
                   className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white"
                   aria-label="Select user role"
                   title="Select user role"
+                  style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.8)",
+                    color: "white",
+                  }}
                 >
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
+                  <option
+                    value="user"
+                    style={{
+                      backgroundColor: "rgba(0, 0, 0, 0.9)",
+                      color: "white",
+                    }}
+                  >
+                    User
+                  </option>
+                  <option
+                    value="admin"
+                    style={{
+                      backgroundColor: "rgba(0, 0, 0, 0.9)",
+                      color: "white",
+                    }}
+                  >
+                    Admin
+                  </option>
                 </select>
               </div>
             </div>

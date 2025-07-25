@@ -310,10 +310,38 @@ export default function UserManagement() {
               onChange={(e) => setRoleFilter(e.target.value)}
               className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
               aria-label="Filter users by role"
+              style={{
+                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                color: "white",
+              }}
             >
-              <option value="">All Roles</option>
-              <option value="admin">Admins</option>
-              <option value="user">Users</option>
+              <option
+                value=""
+                style={{
+                  backgroundColor: "rgba(0, 0, 0, 0.9)",
+                  color: "white",
+                }}
+              >
+                All Roles
+              </option>
+              <option
+                value="admin"
+                style={{
+                  backgroundColor: "rgba(0, 0, 0, 0.9)",
+                  color: "white",
+                }}
+              >
+                Admins
+              </option>
+              <option
+                value="user"
+                style={{
+                  backgroundColor: "rgba(0, 0, 0, 0.9)",
+                  color: "white",
+                }}
+              >
+                Users
+              </option>
             </select>
             {(search || roleFilter) && (
               <button
@@ -387,9 +415,29 @@ export default function UserManagement() {
                         }
                         className="px-2 py-1 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500"
                         aria-label={`Change role for ${user.name}`}
+                        style={{
+                          backgroundColor: "rgba(0, 0, 0, 0.8)",
+                          color: "white",
+                        }}
                       >
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
+                        <option
+                          value="user"
+                          style={{
+                            backgroundColor: "rgba(0, 0, 0, 0.9)",
+                            color: "white",
+                          }}
+                        >
+                          User
+                        </option>
+                        <option
+                          value="admin"
+                          style={{
+                            backgroundColor: "rgba(0, 0, 0, 0.9)",
+                            color: "white",
+                          }}
+                        >
+                          Admin
+                        </option>
                       </select>
                     </td>
                     <td className="px-4 py-3 text-gray-400 text-sm">
@@ -555,9 +603,29 @@ export default function UserManagement() {
                   }
                   className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                   aria-label="Select user role"
+                  style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.8)",
+                    color: "white",
+                  }}
                 >
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
+                  <option
+                    value="user"
+                    style={{
+                      backgroundColor: "rgba(0, 0, 0, 0.9)",
+                      color: "white",
+                    }}
+                  >
+                    User
+                  </option>
+                  <option
+                    value="admin"
+                    style={{
+                      backgroundColor: "rgba(0, 0, 0, 0.9)",
+                      color: "white",
+                    }}
+                  >
+                    Admin
+                  </option>
                 </select>
               </div>
             </div>
