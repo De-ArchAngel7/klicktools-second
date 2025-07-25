@@ -127,6 +127,17 @@ export default function Dashboard() {
   };
 
   const handleUpdatePassword = async () => {
+    // For regular users, pre-fill their email and make it read-only
+    if (hasRole(session?.user, "admin")) {
+      // Admin can update any user's password
+      setUpdatePasswordData({ email: "", newPassword: "" });
+    } else {
+      // Regular user can only update their own password
+      setUpdatePasswordData({
+        email: session?.user?.email || "",
+        newPassword: "",
+      });
+    }
     setShowUpdatePasswordModal(true);
   };
 
@@ -349,23 +360,31 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <button
-                onClick={handleFixExistingUser}
-                className="flex items-center space-x-2 px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-all duration-200 border border-blue-500/30 text-sm"
-              >
-                <span>Fix My Account</span>
-              </button>
-              <button
-                onClick={handleCreateNewAdmin}
-                className="flex items-center space-x-2 px-3 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg transition-all duration-200 border border-green-500/30 text-sm"
-              >
-                <span>Create New Admin</span>
-              </button>
+              {/* Admin-only buttons */}
+              {isAdmin && (
+                <>
+                  <button
+                    onClick={handleFixExistingUser}
+                    className="flex items-center space-x-2 px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-all duration-200 border border-blue-500/30 text-sm"
+                  >
+                    <span>Fix My Account</span>
+                  </button>
+                  <button
+                    onClick={handleCreateNewAdmin}
+                    className="flex items-center space-x-2 px-3 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg transition-all duration-200 border border-green-500/30 text-sm"
+                  >
+                    <span>Create New Admin</span>
+                  </button>
+                </>
+              )}
+              {/* All users can update password */}
               <button
                 onClick={handleUpdatePassword}
                 className="flex items-center space-x-2 px-3 py-2 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 rounded-lg transition-all duration-200 border border-yellow-500/30 text-sm"
               >
-                <span>Update Password</span>
+                <span>
+                  {isAdmin ? "Update Password" : "Change My Password"}
+                </span>
               </button>
               <a
                 href="/"
@@ -1172,7 +1191,7 @@ export default function Dashboard() {
             className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 w-full max-w-md"
           >
             <h2 className="text-2xl font-bold text-white mb-6">
-              Update Password
+              {isAdmin ? "Update Password" : "Change My Password"}
             </h2>
 
             <div className="space-y-4">
@@ -1189,9 +1208,19 @@ export default function Dashboard() {
                       email: e.target.value,
                     })
                   }
-                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white"
-                  placeholder="Enter user email"
+                  disabled={!isAdmin} // Read-only for regular users
+                  className={`w-full px-3 py-2 border border-white/20 rounded-lg ${
+                    isAdmin
+                      ? "bg-white/10 text-white"
+                      : "bg-white/5 text-gray-400 cursor-not-allowed"
+                  }`}
+                  placeholder={isAdmin ? "Enter user email" : "Your email"}
                 />
+                {!isAdmin && (
+                  <p className="text-xs text-gray-400 mt-1">
+                    You can only change your own password
+                  </p>
+                )}
               </div>
 
               <div>
