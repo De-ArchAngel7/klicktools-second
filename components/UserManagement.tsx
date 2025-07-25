@@ -72,6 +72,14 @@ export default function UserManagement() {
     password: "",
     role: "user",
   });
+  const [showCreatePassword, setShowCreatePassword] = useState(false);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+  const [resetPasswordData, setResetPasswordData] = useState({
+    userId: "",
+    userEmail: "",
+    newPassword: "",
+  });
+  const [showResetPassword, setShowResetPassword] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -182,6 +190,48 @@ export default function UserManagement() {
     setSearch("");
     setRoleFilter("");
     setPagination((prev) => ({ ...prev, page: 1 }));
+  };
+
+  const handleResetPassword = (userId: string, userEmail: string) => {
+    setResetPasswordData({
+      userId,
+      userEmail,
+      newPassword: "",
+    });
+    setShowResetPasswordModal(true);
+  };
+
+  const handleResetPasswordSubmit = async () => {
+    try {
+      if (!resetPasswordData.newPassword) {
+        alert("❌ Please enter a new password");
+        return;
+      }
+
+      const response = await fetch("/api/admin/update-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: resetPasswordData.userEmail,
+          newPassword: resetPasswordData.newPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(
+          `🔐 SUCCESS! Password Reset Successfully!\n\n📧 Email: ${resetPasswordData.userEmail}\n🔑 New Password: ${resetPasswordData.newPassword}\n\n✅ The user can now login with the new password!`
+        );
+        setShowResetPasswordModal(false);
+        setResetPasswordData({ userId: "", userEmail: "", newPassword: "" });
+      } else {
+        alert("❌ Error resetting password: " + data.error);
+      }
+    } catch (error: any) {
+      console.error("Error resetting password:", error);
+      alert("❌ Network error: Unable to reset password. Please try again.");
+    }
   };
 
   return (
@@ -346,13 +396,24 @@ export default function UserManagement() {
                       {new Date(user.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3">
-                      <button
-                        onClick={() => handleDeleteUser(user._id)}
-                        className="p-1 text-red-400 hover:text-red-300 hover:bg-red-500/20 rounded transition-all duration-200"
-                        title={`Delete user ${user.name}`}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() =>
+                            handleResetPassword(user._id, user.email)
+                          }
+                          className="p-1 text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/20 rounded transition-all duration-200"
+                          title={`Reset password for ${user.name}`}
+                        >
+                          🔑
+                        </button>
+                        <button
+                          onClick={() => handleDeleteUser(user._id)}
+                          className="p-1 text-red-400 hover:text-red-300 hover:bg-red-500/20 rounded transition-all duration-200"
+                          title={`Delete user ${user.name}`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -457,18 +518,30 @@ export default function UserManagement() {
                 <label className="block text-gray-300 text-sm font-medium mb-2">
                   Password
                 </label>
-                <input
-                  type="password"
-                  value={createForm.password}
-                  onChange={(e) =>
-                    setCreateForm((prev) => ({
-                      ...prev,
-                      password: e.target.value,
-                    }))
-                  }
-                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                  placeholder="Enter password"
-                />
+                <div className="relative">
+                  <input
+                    type={showCreatePassword ? "text" : "password"}
+                    value={createForm.password}
+                    onChange={(e) =>
+                      setCreateForm((prev) => ({
+                        ...prev,
+                        password: e.target.value,
+                      }))
+                    }
+                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 pr-10"
+                    placeholder="Enter password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCreatePassword(!showCreatePassword)}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                    aria-label={
+                      showCreatePassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showCreatePassword ? "👁️" : "🙈"}
+                  </button>
+                </div>
               </div>
 
               <div>
@@ -501,6 +574,90 @@ export default function UserManagement() {
                 className="flex-1 px-4 py-2 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-400 rounded-lg transition-all duration-200 border border-cyan-500/30 hover:from-cyan-500/30 hover:to-purple-500/30"
               >
                 Create User
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Reset Password Modal */}
+      {showResetPasswordModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-black/90 backdrop-blur-xl rounded-xl border border-white/10 p-6 w-full max-w-md"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-white">
+                Reset User Password
+              </h3>
+              <button
+                onClick={() => setShowResetPasswordModal(false)}
+                className="p-1 text-gray-400 hover:text-white hover:bg-white/10 rounded transition-all duration-200"
+                title="Close modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  User Email
+                </label>
+                <input
+                  type="email"
+                  value={resetPasswordData.userEmail}
+                  disabled
+                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  placeholder="User email"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  New Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showResetPassword ? "text" : "password"}
+                    value={resetPasswordData.newPassword}
+                    onChange={(e) =>
+                      setResetPasswordData({
+                        ...resetPasswordData,
+                        newPassword: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 pr-10"
+                    placeholder="Enter new password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowResetPassword(!showResetPassword)}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                    aria-label={
+                      showResetPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showResetPassword ? "👁️" : "🙈"}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex space-x-3 mt-6">
+              <button
+                onClick={() => setShowResetPasswordModal(false)}
+                className="flex-1 px-4 py-2 bg-gray-500/20 text-gray-300 hover:bg-gray-500/30 rounded-lg transition-all duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleResetPasswordSubmit}
+                className="flex-1 px-4 py-2 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-400 rounded-lg transition-all duration-200 border border-yellow-500/30 hover:from-yellow-500/30 hover:to-orange-500/30"
+              >
+                Reset Password
               </button>
             </div>
           </motion.div>

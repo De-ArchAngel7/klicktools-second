@@ -67,6 +67,8 @@ export default function Dashboard() {
     email: "",
     newPassword: "",
   });
+  const [showCreatePassword, setShowCreatePassword] = useState(false);
+  const [showUpdatePassword, setShowUpdatePassword] = useState(false);
 
   // Redirect unauthenticated users
   useEffect(() => {
@@ -1091,18 +1093,30 @@ export default function Dashboard() {
                 <label className="block text-gray-300 text-sm font-medium mb-2">
                   Password
                 </label>
-                <input
-                  type="password"
-                  value={createUserData.password}
-                  onChange={(e) =>
-                    setCreateUserData({
-                      ...createUserData,
-                      password: e.target.value,
-                    })
-                  }
-                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white"
-                  placeholder="Enter password"
-                />
+                <div className="relative">
+                  <input
+                    type={showCreatePassword ? "text" : "password"}
+                    value={createUserData.password}
+                    onChange={(e) =>
+                      setCreateUserData({
+                        ...createUserData,
+                        password: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white pr-10"
+                    placeholder="Enter password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCreatePassword(!showCreatePassword)}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                    aria-label={
+                      showCreatePassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showCreatePassword ? "👁️" : "🙈"}
+                  </button>
+                </div>
               </div>
 
               <div>
@@ -1180,18 +1194,30 @@ export default function Dashboard() {
                 <label className="block text-gray-300 text-sm font-medium mb-2">
                   New Password
                 </label>
-                <input
-                  type="password"
-                  value={updatePasswordData.newPassword}
-                  onChange={(e) =>
-                    setUpdatePasswordData({
-                      ...updatePasswordData,
-                      newPassword: e.target.value,
-                    })
-                  }
-                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white"
-                  placeholder="Enter new password"
-                />
+                <div className="relative">
+                  <input
+                    type={showUpdatePassword ? "text" : "password"}
+                    value={updatePasswordData.newPassword}
+                    onChange={(e) =>
+                      setUpdatePasswordData({
+                        ...updatePasswordData,
+                        newPassword: e.target.value,
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white pr-10"
+                    placeholder="Enter new password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowUpdatePassword(!showUpdatePassword)}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                    aria-label={
+                      showUpdatePassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showUpdatePassword ? "👁️" : "🙈"}
+                  </button>
+                </div>
               </div>
             </div>
 
