@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getUsersCollection } from "@/lib/db";
+import { ObjectId } from "mongodb";
 
 export async function GET(request: NextRequest) {
   try {
@@ -122,8 +123,19 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Invalid role" }, { status: 400 });
     }
 
+    // Convert userId to ObjectId
+    let objectId;
+    try {
+      objectId = new ObjectId(userId);
+    } catch (error) {
+      return NextResponse.json(
+        { error: "Invalid user ID format" },
+        { status: 400 }
+      );
+    }
+
     // Prevent admin from changing their own role
-    if (userId === currentUser._id?.toString()) {
+    if (objectId.toString() === currentUser._id?.toString()) {
       return NextResponse.json(
         { error: "Cannot change your own role" },
         { status: 400 }
@@ -132,7 +144,7 @@ export async function PUT(request: NextRequest) {
 
     // Update user role
     const result = await usersCollection.updateOne(
-      { _id: userId },
+      { _id: objectId },
       {
         $set: {
           role: role,
@@ -185,8 +197,19 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
+    // Convert userId to ObjectId
+    let objectId;
+    try {
+      objectId = new ObjectId(userId);
+    } catch (error) {
+      return NextResponse.json(
+        { error: "Invalid user ID format" },
+        { status: 400 }
+      );
+    }
+
     // Prevent admin from deleting themselves
-    if (userId === currentUser._id?.toString()) {
+    if (objectId.toString() === currentUser._id?.toString()) {
       return NextResponse.json(
         { error: "Cannot delete your own account" },
         { status: 400 }
@@ -194,8 +217,12 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Check if user to be deleted is also an admin
-    const userToDelete = await usersCollection.findOne({ _id: userId });
-    if (userToDelete?.role === "admin") {
+    const userToDelete = await usersCollection.findOne({ _id: objectId });
+    if (!userToDelete) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    if (userToDelete.role === "admin") {
       return NextResponse.json(
         { error: "Cannot delete another admin" },
         { status: 400 }
@@ -203,7 +230,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Delete user
-    const result = await usersCollection.deleteOne({ _id: userId });
+    const result = await usersCollection.deleteOne({ _id: objectId });
 
     if (result.deletedCount === 0) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });

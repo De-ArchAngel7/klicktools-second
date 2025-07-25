@@ -54,6 +54,20 @@ export default function Dashboard() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingTool, setEditingTool] = useState<ToolType | null>(null);
 
+  // Modal states for user management
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
+  const [showUpdatePasswordModal, setShowUpdatePasswordModal] = useState(false);
+  const [createUserData, setCreateUserData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "user" as "user" | "admin",
+  });
+  const [updatePasswordData, setUpdatePasswordData] = useState({
+    email: "",
+    newPassword: "",
+  });
+
   // Redirect unauthenticated users
   useEffect(() => {
     if (status === "loading") return; // Still loading
@@ -111,24 +125,32 @@ export default function Dashboard() {
   };
 
   const handleUpdatePassword = async () => {
+    setShowUpdatePasswordModal(true);
+  };
+
+  const handleUpdatePasswordSubmit = async () => {
     try {
+      if (!updatePasswordData.email || !updatePasswordData.newPassword) {
+        alert("❌ Please fill in all fields");
+        return;
+      }
+
       const response = await fetch("/api/admin/update-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: "heylelyaka@gmail.com",
-          newPassword: "#eric-yaka%",
-        }),
+        body: JSON.stringify(updatePasswordData),
       });
 
       const data = await response.json();
 
       if (response.ok) {
         alert(
-          "✅ Password updated successfully! You can now login with:\nEmail: heylelyaka@gmail.com\nPassword: #eric-yaka%"
+          `✅ Password updated successfully!\n\nLogin Credentials:\nEmail: ${updatePasswordData.email}\nPassword: ${updatePasswordData.newPassword}`
         );
+        setShowUpdatePasswordModal(false);
+        setUpdatePasswordData({ email: "", newPassword: "" });
       } else {
         alert("❌ Error updating password: " + data.error);
       }
@@ -166,30 +188,40 @@ export default function Dashboard() {
   };
 
   const handleCreateNewAdmin = async () => {
+    setShowCreateUserModal(true);
+  };
+
+  const handleCreateUserSubmit = async () => {
     try {
-      // Generate a random email to avoid conflicts
-      const randomId = Math.random().toString(36).substring(2, 8);
-      const email = `admin${randomId}@klicktools.com`;
+      if (
+        !createUserData.name ||
+        !createUserData.email ||
+        !createUserData.password
+      ) {
+        alert("❌ Please fill in all fields");
+        return;
+      }
 
       const response = await fetch("/api/admin/create-user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          name: "New Admin User",
-          email: email,
-          password: "admin123456",
-          role: "admin",
-        }),
+        body: JSON.stringify(createUserData),
       });
 
       const data = await response.json();
 
       if (response.ok) {
         alert(
-          `✅ New admin user created successfully!\n\nLogin Credentials:\nEmail: ${email}\nPassword: admin123456\n\nYou can now use these credentials to login!`
+          `✅ User created successfully!\n\nLogin Credentials:\nEmail: ${createUserData.email}\nPassword: ${createUserData.password}\nRole: ${createUserData.role}\n\nYou can now use these credentials to login!`
         );
+        setShowCreateUserModal(false);
+        setCreateUserData({ name: "", email: "", password: "", role: "user" });
+        // Refresh admin stats
+        if (hasRole(session?.user, "admin")) {
+          fetchAdminStats();
+        }
       } else {
         alert("❌ Error creating user: " + data.error);
       }
@@ -988,6 +1020,179 @@ export default function Dashboard() {
           tool={editingTool}
           mode={editingTool ? "edit" : "add"}
         />
+      )}
+
+      {/* Create User Modal */}
+      {showCreateUserModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 w-full max-w-md"
+          >
+            <h2 className="text-2xl font-bold text-white mb-6">
+              Create New User
+            </h2>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  value={createUserData.name}
+                  onChange={(e) =>
+                    setCreateUserData({
+                      ...createUserData,
+                      name: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white"
+                  placeholder="Enter user name"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={createUserData.email}
+                  onChange={(e) =>
+                    setCreateUserData({
+                      ...createUserData,
+                      email: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white"
+                  placeholder="Enter user email"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={createUserData.password}
+                  onChange={(e) =>
+                    setCreateUserData({
+                      ...createUserData,
+                      password: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white"
+                  placeholder="Enter password"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  Role
+                </label>
+                <select
+                  value={createUserData.role}
+                  onChange={(e) =>
+                    setCreateUserData({
+                      ...createUserData,
+                      role: e.target.value as "user" | "admin",
+                    })
+                  }
+                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white"
+                >
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex space-x-3 mt-6">
+              <button
+                onClick={() => setShowCreateUserModal(false)}
+                className="flex-1 px-4 py-2 bg-gray-500/20 hover:bg-gray-500/30 text-gray-300 rounded-lg transition-all duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCreateUserSubmit}
+                className="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200"
+              >
+                Create User
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Update Password Modal */}
+      {showUpdatePasswordModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 w-full max-w-md"
+          >
+            <h2 className="text-2xl font-bold text-white mb-6">
+              Update Password
+            </h2>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={updatePasswordData.email}
+                  onChange={(e) =>
+                    setUpdatePasswordData({
+                      ...updatePasswordData,
+                      email: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white"
+                  placeholder="Enter user email"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  value={updatePasswordData.newPassword}
+                  onChange={(e) =>
+                    setUpdatePasswordData({
+                      ...updatePasswordData,
+                      newPassword: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white"
+                  placeholder="Enter new password"
+                />
+              </div>
+            </div>
+
+            <div className="flex space-x-3 mt-6">
+              <button
+                onClick={() => setShowUpdatePasswordModal(false)}
+                className="flex-1 px-4 py-2 bg-gray-500/20 hover:bg-gray-500/30 text-gray-300 rounded-lg transition-all duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdatePasswordSubmit}
+                className="flex-1 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-all duration-200"
+              >
+                Update Password
+              </button>
+            </div>
+          </motion.div>
+        </div>
       )}
     </div>
   );
