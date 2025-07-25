@@ -10,6 +10,7 @@ import {
   TrendingUp,
   Clock,
   Zap,
+  X,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import AIToolCard from "@/components/AIToolCard";
@@ -230,11 +231,18 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             className="fixed top-20 left-1/2 transform -translate-x-1/2 z-40 bg-gradient-to-r from-cyan-500 to-purple-500 text-white px-6 py-3 rounded-full shadow-lg border border-white/20 backdrop-blur-xl"
           >
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3">
               <Search className="w-4 h-4" />
               <span className="font-medium">
                 {searchResults.length} tools found - Scroll down to view results
               </span>
+              <button
+                onClick={clearFilters}
+                className="ml-2 p-1 hover:bg-white/20 rounded-full transition-all duration-200"
+                title="Clear all filters"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
           </motion.div>
         )}
@@ -336,6 +344,13 @@ export default function Home() {
                         <option value="rating">Highest Rated</option>
                         <option value="name">Name A-Z</option>
                       </select>
+                      <button
+                        onClick={clearFilters}
+                        className="p-2 hover:bg-white/10 rounded-lg transition-all duration-200 text-gray-400 hover:text-white"
+                        title="Clear all filters"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
 
@@ -347,28 +362,78 @@ export default function Home() {
                     )) && (
                     <div className="flex flex-wrap gap-2 mb-6">
                       {searchQuery && (
-                        <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full text-sm border border-cyan-500/30">
-                          Search: "{searchQuery}"
+                        <span className="flex items-center space-x-2 px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full text-sm border border-cyan-500/30">
+                          <span>Search: "{searchQuery}"</span>
+                          <button
+                            onClick={() => setSearchQuery("")}
+                            className="hover:bg-cyan-500/30 rounded-full p-0.5 transition-all duration-200"
+                            title="Remove search filter"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
                         </span>
                       )}
                       {selectedCategory && (
-                        <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm border border-purple-500/30">
-                          Category: {selectedCategory}
+                        <span className="flex items-center space-x-2 px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm border border-purple-500/30">
+                          <span>Category: {selectedCategory}</span>
+                          <button
+                            onClick={() => setSelectedCategory("")}
+                            className="hover:bg-purple-500/30 rounded-full p-0.5 transition-all duration-200"
+                            title="Remove category filter"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
                         </span>
                       )}
                       {advancedFilters.pricing && (
-                        <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm border border-green-500/30">
-                          Pricing: {advancedFilters.pricing}
+                        <span className="flex items-center space-x-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm border border-green-500/30">
+                          <span>Pricing: {advancedFilters.pricing}</span>
+                          <button
+                            onClick={() =>
+                              setAdvancedFilters({
+                                ...advancedFilters,
+                                pricing: "",
+                              })
+                            }
+                            className="hover:bg-green-500/30 rounded-full p-0.5 transition-all duration-200"
+                            title="Remove pricing filter"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
                         </span>
                       )}
                       {advancedFilters.rating > 0 && (
-                        <span className="px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-sm border border-yellow-500/30">
-                          Rating: {advancedFilters.rating}+ stars
+                        <span className="flex items-center space-x-2 px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-sm border border-yellow-500/30">
+                          <span>Rating: {advancedFilters.rating}+ stars</span>
+                          <button
+                            onClick={() =>
+                              setAdvancedFilters({
+                                ...advancedFilters,
+                                rating: 0,
+                              })
+                            }
+                            className="hover:bg-yellow-500/30 rounded-full p-0.5 transition-all duration-200"
+                            title="Remove rating filter"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
                         </span>
                       )}
                       {advancedFilters.apiAvailable && (
-                        <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm border border-blue-500/30">
-                          API Available
+                        <span className="flex items-center space-x-2 px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm border border-blue-500/30">
+                          <span>API Available</span>
+                          <button
+                            onClick={() =>
+                              setAdvancedFilters({
+                                ...advancedFilters,
+                                apiAvailable: false,
+                              })
+                            }
+                            className="hover:bg-blue-500/30 rounded-full p-0.5 transition-all duration-200"
+                            title="Remove API filter"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
                         </span>
                       )}
                     </div>
