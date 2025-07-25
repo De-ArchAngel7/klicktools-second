@@ -23,7 +23,7 @@ export default function TestDB() {
 
       const data = await response.json();
       setResult({ status: response.status, data });
-    } catch (error) {
+    } catch (error: any) {
       setResult({ error: error.message });
     } finally {
       setLoading(false);
@@ -48,7 +48,7 @@ export default function TestDB() {
 
       const data = await response.json();
       setResult({ status: response.status, data });
-    } catch (error) {
+    } catch (error: any) {
       setResult({ error: error.message });
     } finally {
       setLoading(false);
@@ -71,7 +71,7 @@ export default function TestDB() {
 
       const data = await response.json();
       setResult({ status: response.status, data });
-    } catch (error) {
+    } catch (error: any) {
       setResult({ error: error.message });
     } finally {
       setLoading(false);
