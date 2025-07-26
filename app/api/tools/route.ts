@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Category filter
-    if (category) {
+    if (category && category !== "All Tools") {
       filter.category = category;
     }
 
@@ -81,6 +81,7 @@ export async function GET(request: NextRequest) {
         break;
     }
 
+    console.log("API: Filter being applied:", JSON.stringify(filter, null, 2));
     console.log("API: Executing database query...");
     const tools = await toolsCollection.find(filter).sort(sortOption).toArray();
     console.log(`API: Found ${tools.length} tools`);

@@ -1,23 +1,39 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import {
-  Search,
-  Filter,
-  Star,
-  Heart,
-  TrendingUp,
-  Clock,
-  Zap,
-  X,
-} from "lucide-react";
+import { Search, Filter, Star, Heart, MessageCircle, X } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import GlassmorphicCard from "@/components/GlassmorphicCard";
 import ReviewModal from "@/components/ReviewModal";
 import OnboardingScreen from "@/components/OnboardingScreen";
 import { Tool } from "@/types";
 import DarkModeToggle from "@/components/DarkModeToggle";
+
+const getCategoryIcon = (category: string) => {
+  // Map category names to their icon files
+  const categoryIconMap: { [key: string]: string } = {
+    "All Tools": "ai-all",
+    "AI Writing": "ai-writing",
+    "ai-writing": "ai-writing",
+    "ai-chat": "ai-chat",
+    "ai-image": "ai-image",
+    "ai-video": "ai-video",
+    "ai-code": "ai-code",
+    "ai-business": "ai-business",
+    "ai-education": "ai-education",
+    "ai-health": "ai-health",
+    "ai-audio": "ai-audio",
+    "ai-beauty": "ai-beauty",
+  };
+
+  const iconName = categoryIconMap[category] || "default";
+
+  const pngPath = `/category-icons/${iconName}.png`;
+  const svgPath = `/category-icons/${iconName}.svg`;
+
+  return { pngPath, svgPath };
+};
 
 export default function Home() {
   const [showOnboarding, setShowOnboarding] = useState(true);
@@ -32,12 +48,30 @@ export default function Home() {
   const [isSearching, setIsSearching] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [advancedFilters, setAdvancedFilters] = useState({
     pricing: "",
     rating: 0,
     status: "",
     apiAvailable: false,
   });
+
+  // Check for dark mode
+  useEffect(() => {
+    const checkDarkMode = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setIsDarkMode(isDark);
+    };
+
+    checkDarkMode();
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   // Define hasActiveFilters before using it in useEffect
   const hasActiveFilters =
@@ -216,54 +250,101 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-slate-900 dark:via-purple-900 dark:to-slate-900 light:from-blue-50 light:via-purple-50 light:to-blue-50">
+    <div
+      className={`min-h-screen ${
+        isDarkMode ? "neon-gradient-bg" : "ai-gradient-bg"
+      }`}
+    >
+      {/* Animated Stars Background for Dark Mode */}
+      {isDarkMode && (
+        <div className="stars-bg">
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+          <div className="star"></div>
+        </div>
+      )}
+      {/* Navbar */}
       <Navbar />
 
       {/* Floating Search Results Indicator */}
-      {(searchQuery ||
-        selectedCategory ||
-        Object.values(advancedFilters).some(
-          (v) => v !== "" && v !== 0 && v !== false
-        )) &&
-        searchResults.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="fixed top-20 left-1/2 transform -translate-x-1/2 z-40 bg-gradient-to-r from-cyan-500 to-purple-500 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-full shadow-lg border border-white/20 backdrop-blur-xl max-w-[90vw] sm:max-w-none"
-          >
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <Search className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="font-medium text-sm sm:text-base">
-                {searchResults.length} tools found - Scroll down to view results
-              </span>
-              <button
-                onClick={clearFilters}
-                className="ml-1 sm:ml-2 p-1 hover:bg-white/20 rounded-full transition-all duration-200"
-                title="Clear all filters"
-              >
-                <X className="w-3 h-3 sm:w-4 sm:h-4" />
-              </button>
-            </div>
-          </motion.div>
-        )}
+      {hasActiveFilters && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`fixed top-20 left-1/2 transform -translate-x-1/2 z-40 px-3 sm:px-6 py-2 sm:py-3 rounded-full shadow-lg backdrop-blur-xl max-w-[90vw] sm:max-w-none ${
+            isDarkMode
+              ? "neon-glass-card text-cyan-400 neon-border-glow"
+              : "ai-glass-card text-gray-800"
+          }`}
+        >
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <Search className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="font-medium text-sm sm:text-base">
+              {searchResults.length} tools found - Scroll down to view results
+            </span>
+            <button
+              onClick={clearFilters}
+              className={`ml-1 sm:ml-2 p-1 rounded-full transition-all duration-200 ${
+                isDarkMode ? "hover:bg-cyan-400/20" : "hover:bg-white/30"
+              }`}
+              title="Clear all filters"
+            >
+              <X className="w-3 h-3 sm:w-4 sm:h-4" />
+            </button>
+          </div>
+        </motion.div>
+      )}
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 dark:from-cyan-500/10 dark:to-purple-500/10 light:from-cyan-500/20 light:to-purple-500/20" />
+        <div
+          className={`absolute inset-0 ${
+            isDarkMode
+              ? "bg-gradient-to-r from-cyan-500/5 to-purple-500/5"
+              : "bg-gradient-to-br from-white/20 via-transparent to-white/10"
+          }`}
+        />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center"
           >
-            <h1 className="text-5xl md:text-7xl font-bold text-white dark:text-white light:text-gray-900 mb-6">
+            <h1
+              className={`text-5xl md:text-7xl font-bold mb-6 ${
+                isDarkMode
+                  ? "text-white neon-text-glow"
+                  : "text-white ai-text-glow"
+              }`}
+            >
               Discover the Best
               <span className="gradient-text bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
                 {" "}
                 AI Tools
               </span>
             </h1>
-            <p className="text-xl text-gray-300 dark:text-gray-300 light:text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p
+              className={`text-xl mb-8 max-w-3xl mx-auto ${
+                isDarkMode ? "text-gray-300" : "text-white/90"
+              }`}
+            >
               Explore our curated collection of cutting-edge AI tools and
               utilities. Find the perfect solution for your next project.
             </p>
@@ -277,7 +358,11 @@ export default function Home() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                  className="w-full px-6 py-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
+                  className={`w-full px-6 py-4 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent ${
+                    isDarkMode
+                      ? "neon-glass-card text-white placeholder-gray-400 neon-border-glow"
+                      : "ai-glass-card text-white placeholder-white/70 border-0"
+                  }`}
                 />
                 <button
                   onClick={handleSearch}
@@ -623,10 +708,20 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl font-bold text-white mb-4">
+          <h2
+            className={`text-3xl font-bold mb-4 ${
+              isDarkMode
+                ? "text-white neon-text-glow"
+                : "text-white ai-text-glow"
+            }`}
+          >
             Browse by Category
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <p
+            className={`max-w-2xl mx-auto ${
+              isDarkMode ? "text-gray-400" : "text-white/80"
+            }`}
+          >
             Explore tools organized by category to find exactly what you need
             for your project.
           </p>
@@ -643,31 +738,67 @@ export default function Home() {
                 onClick={() => handleCategorySelect(category.category)}
                 className={`category-card p-3 sm:p-4 rounded-xl border transition-all duration-200 ${
                   selectedCategory === category.category
-                    ? "bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-cyan-500/30 text-cyan-400 scale-105"
-                    : "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10 hover:border-white/20 hover:scale-105"
+                    ? isDarkMode
+                      ? "neon-glass-card border-cyan-400 text-cyan-400 scale-105 neon-border-glow"
+                      : "ai-glass-card border-white/40 text-white scale-105"
+                    : isDarkMode
+                    ? "neon-glass-card border-cyan-400/30 text-gray-300 hover:border-cyan-400/50 hover:text-cyan-400 hover:scale-105"
+                    : "ai-glass-card border-white/20 text-white hover:bg-white/20 hover:border-white/40 hover:scale-105"
                 }`}
               >
                 <div className="text-center">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-lg flex items-center justify-center mx-auto mb-2">
-                    <span className="text-white font-bold text-xs sm:text-sm">
-                      {category.category.charAt(0).toUpperCase()}
-                    </span>
+                  <div
+                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center mx-auto mb-2 ${
+                      isDarkMode
+                        ? "bg-gradient-to-r from-cyan-400 to-purple-500 neon-border-glow"
+                        : "bg-gradient-to-r from-white/20 to-white/10"
+                    }`}
+                  >
+                    <img
+                      src={getCategoryIcon(category.category).pngPath}
+                      alt={category.category}
+                      className="w-full h-full object-cover rounded-xl"
+                      onError={(e) => {
+                        const target = e.currentTarget as HTMLImageElement;
+                        if (target.src.endsWith(".png")) {
+                          target.src = getCategoryIcon(
+                            category.category
+                          ).svgPath;
+                        } else {
+                          target.src = "/category-icons/default.png";
+                        }
+                      }}
+                    />
                   </div>
                   <p className="font-medium text-xs sm:text-sm mb-1 line-clamp-2">
                     {category.category}
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p
+                    className={`text-xs ${
+                      isDarkMode ? "text-gray-400" : "text-white/70"
+                    }`}
+                  >
                     {category.count} tools
                   </p>
                   {selectedCategory === category.category && (
-                    <p className="text-xs text-cyan-400 mt-1">✓ Active</p>
+                    <p
+                      className={`text-xs mt-1 ${
+                        isDarkMode
+                          ? "text-cyan-400 neon-text-glow"
+                          : "text-white"
+                      }`}
+                    >
+                      ✓ Active
+                    </p>
                   )}
                 </div>
               </motion.button>
             ))
           ) : (
             <div className="col-span-full text-center py-8">
-              <div className="text-gray-400">Loading categories...</div>
+              <div className={isDarkMode ? "text-gray-400" : "text-white/70"}>
+                Loading categories...
+              </div>
             </div>
           )}
         </div>
@@ -680,8 +811,18 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl font-bold text-white mb-4">Featured Tools</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <h2
+            className={`text-3xl font-bold mb-4 ${
+              isDarkMode ? "text-white" : "text-white ai-text-glow"
+            }`}
+          >
+            Featured Tools
+          </h2>
+          <p
+            className={`max-w-2xl mx-auto ${
+              isDarkMode ? "text-gray-400" : "text-white/80"
+            }`}
+          >
             Hand-picked tools that stand out for their innovation, quality, and
             user experience.
           </p>

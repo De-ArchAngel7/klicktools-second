@@ -28,10 +28,43 @@ export default function GlassmorphicCard({
     "favorite"
   );
   const [dominantColor, setDominantColor] = useState<string>(
-    "rgba(59, 130, 246, 0.3)"
+    tool.color ? hexToRgba(tool.color, 0.3) : "rgba(59, 130, 246, 0.3)"
   );
   const [isColorExtracted, setIsColorExtracted] = useState(false);
+  const [logoError, setLogoError] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const logoRef = useRef<HTMLImageElement>(null);
+
+  function hexToRgba(hex: string, alpha: number) {
+    let c = hex.replace("#", "");
+    if (c.length === 3)
+      c = c
+        .split("")
+        .map((x) => x + x)
+        .join("");
+    const num = parseInt(c, 16);
+    const r = (num >> 16) & 255;
+    const g = (num >> 8) & 255;
+    const b = num & 255;
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+
+  // Check for dark mode
+  useEffect(() => {
+    const checkDarkMode = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setIsDarkMode(isDark);
+    };
+
+    checkDarkMode();
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (session?.user?.email) {
@@ -41,19 +74,19 @@ export default function GlassmorphicCard({
   }, [session, tool._id]);
 
   useEffect(() => {
-    if (tool.logo && !isColorExtracted) {
+    if (tool.logo && !logoError && !isColorExtracted) {
       extractDominantColor();
+    } else if (logoError && tool.color) {
+      setDominantColor(hexToRgba(tool.color, 0.3));
     }
-  }, [tool.logo, isColorExtracted]);
+  }, [tool.logo, isColorExtracted, logoError]);
 
   const extractDominantColor = async () => {
     if (!tool.logo || !logoRef.current) return;
-
     try {
       const colorThief = new ColorThief();
-      const img = new Image();
+      const img = new window.Image();
       img.crossOrigin = "anonymous";
-
       img.onload = () => {
         try {
           const palette = colorThief.getPalette(img, 5);
@@ -64,21 +97,24 @@ export default function GlassmorphicCard({
             setIsColorExtracted(true);
           }
         } catch (error) {
-          console.log("Color extraction failed, using default:", error);
-          setDominantColor("rgba(59, 130, 246, 0.3)");
+          setDominantColor(
+            tool.color ? hexToRgba(tool.color, 0.3) : "rgba(59, 130, 246, 0.3)"
+          );
           setIsColorExtracted(true);
         }
       };
-
       img.onerror = () => {
-        setDominantColor("rgba(59, 130, 246, 0.3)");
+        setLogoError(true);
+        setDominantColor(
+          tool.color ? hexToRgba(tool.color, 0.3) : "rgba(59, 130, 246, 0.3)"
+        );
         setIsColorExtracted(true);
       };
-
       img.src = tool.logo;
     } catch (error) {
-      console.log("Color extraction error:", error);
-      setDominantColor("rgba(59, 130, 246, 0.3)");
+      setDominantColor(
+        tool.color ? hexToRgba(tool.color, 0.3) : "rgba(59, 130, 246, 0.3)"
+      );
       setIsColorExtracted(true);
     }
   };
@@ -145,20 +181,35 @@ export default function GlassmorphicCard({
     }
   };
 
+  // Glass background color logic
+  const glassBg = isDarkMode
+    ? "linear-gradient(135deg, rgba(0,255,255,0.1) 0%, rgba(255,0,255,0.05) 100%)" // Neon cyan to purple gradient
+    : "linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(147,197,253,0.3) 25%, rgba(196,181,253,0.2) 50%, rgba(251,207,232,0.3) 75%, rgba(255,255,255,0.8) 100%)"; // Beautiful gradient glass effect for light mode
+
   return (
     <>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         whileHover={{ y: -5, scale: 1.02 }}
-        className="group relative overflow-hidden rounded-xl border border-white/20 backdrop-blur-xl transition-all duration-300 hover:border-white/30"
+        className={`group relative overflow-hidden rounded-xl transition-all duration-300 ${
+          isDarkMode
+            ? "neon-glass-card hover:border-cyan-400/50"
+            : "ai-glass-card hover:border-blue-400/50"
+        }`}
         style={{
-          background: `linear-gradient(135deg, ${dominantColor}, rgba(255, 255, 255, 0.1))`,
-          boxShadow: `0 8px 32px 0 rgba(31, 38, 135, 0.37), 0 0 0 1px rgba(255, 255, 255, 0.1)`,
+          background: glassBg,
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          boxShadow: isDarkMode
+            ? `0 8px 32px rgba(0, 255, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)`
+            : `0 8px 32px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)`,
         }}
       >
-        {/* Glassmorphic Overlay */}
-        <div className="absolute inset-0 bg-white/5 backdrop-blur-sm" />
+        {/* Glassmorphic Overlay (only in dark mode) */}
+        {isDarkMode && (
+          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-purple-500/5 backdrop-blur-sm" />
+        )}
 
         {/* Content */}
         <div className="relative z-10 p-4 sm:p-6">
@@ -166,22 +217,15 @@ export default function GlassmorphicCard({
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 space-y-3 sm:space-y-0">
             <div className="flex items-start space-x-3 flex-1 min-w-0">
               <div className="relative flex-shrink-0">
-                {tool.logo ? (
+                {tool.logo && !logoError ? (
                   <>
                     <img
                       ref={logoRef}
                       src={tool.logo}
                       alt={tool.name}
                       className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg object-cover shadow-lg"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = "none";
-                        target.nextElementSibling?.classList.remove("hidden");
-                      }}
+                      onError={() => setLogoError(true)}
                     />
-                    <div className="hidden w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center text-white font-bold text-sm sm:text-lg bg-gradient-to-br from-cyan-500 to-purple-500 shadow-lg">
-                      {tool.name.charAt(0).toUpperCase()}
-                    </div>
                   </>
                 ) : (
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center text-white font-bold text-sm sm:text-lg bg-gradient-to-br from-cyan-500 to-purple-500 shadow-lg">
@@ -190,10 +234,20 @@ export default function GlassmorphicCard({
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-base sm:text-lg font-semibold text-white group-hover:text-cyan-300 transition-colors break-words leading-tight drop-shadow-sm">
+                <h3
+                  className={`text-base sm:text-lg font-semibold break-words leading-tight drop-shadow-sm ${
+                    isDarkMode
+                      ? "text-white group-hover:text-cyan-300"
+                      : "text-gray-800 group-hover:text-blue-600"
+                  } transition-colors`}
+                >
                   {tool.name}
                 </h3>
-                <p className="text-gray-200 text-xs sm:text-sm mt-1 line-clamp-2 leading-relaxed drop-shadow-sm">
+                <p
+                  className={`text-xs sm:text-sm mt-1 line-clamp-2 leading-relaxed drop-shadow-sm ${
+                    isDarkMode ? "text-gray-200" : "text-gray-600"
+                  }`}
+                >
                   {tool.description}
                 </p>
               </div>
@@ -209,7 +263,9 @@ export default function GlassmorphicCard({
                 className={`p-1.5 sm:p-2 rounded-lg transition-all duration-200 backdrop-blur-sm ${
                   isFavorited
                     ? "bg-red-500/30 text-red-300 border border-red-400/50 shadow-lg"
-                    : "bg-white/10 text-gray-300 hover:bg-white/20 hover:text-red-300 border border-white/20 shadow-lg"
+                    : isDarkMode
+                    ? "bg-white/10 text-gray-300 hover:bg-white/20 hover:text-red-300 border border-white/20 shadow-lg"
+                    : "bg-gray-800/20 text-gray-600 hover:bg-gray-800/30 hover:text-red-500 border border-gray-300/50 shadow-lg"
                 }`}
                 title={
                   isFavorited ? "Remove from favorites" : "Add to favorites"
@@ -233,7 +289,11 @@ export default function GlassmorphicCard({
                   }
                   setShowReviewModal(true);
                 }}
-                className="p-1.5 sm:p-2 rounded-lg bg-white/10 text-gray-300 hover:bg-white/20 hover:text-yellow-300 border border-white/20 transition-all duration-200 shadow-lg backdrop-blur-sm"
+                className={`p-1.5 sm:p-2 rounded-lg border transition-all duration-200 shadow-lg backdrop-blur-sm ${
+                  isDarkMode
+                    ? "bg-white/10 text-gray-300 hover:bg-white/20 hover:text-yellow-300 border-white/20"
+                    : "bg-gray-800/20 text-gray-600 hover:bg-gray-800/30 hover:text-yellow-600 border-gray-300/50"
+                }`}
                 title="Rate this tool"
               >
                 <Star className="w-3 h-3 sm:w-4 sm:h-4" />

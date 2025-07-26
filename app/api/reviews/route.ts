@@ -29,7 +29,19 @@ export async function POST(request: NextRequest) {
     }
 
     const toolsCollection = await getToolsCollection();
-    const tool = await toolsCollection.findOne({ _id: toolId });
+
+    // Convert toolId to ObjectId for database query
+    let objectId;
+    try {
+      objectId = new ObjectId(toolId);
+    } catch (error) {
+      return NextResponse.json(
+        { error: "Invalid tool ID format" },
+        { status: 400 }
+      );
+    }
+
+    const tool = await toolsCollection.findOne({ _id: objectId });
 
     if (!tool) {
       return NextResponse.json({ error: "Tool not found" }, { status: 404 });
@@ -72,7 +84,7 @@ export async function POST(request: NextRequest) {
       toolReviews.reduce((sum, r) => sum + r.rating, 0) / toolReviews.length;
 
     await toolsCollection.updateOne(
-      { _id: toolId },
+      { _id: objectId },
       {
         $set: {
           rating: Math.round(avgRating * 10) / 10,
@@ -141,6 +153,18 @@ export async function PUT(request: NextRequest) {
 
     // Update tool's average rating
     const toolsCollection = await getToolsCollection();
+
+    // Convert toolId to ObjectId for database query
+    let objectId;
+    try {
+      objectId = new ObjectId(toolId);
+    } catch (error) {
+      return NextResponse.json(
+        { error: "Invalid tool ID format" },
+        { status: 400 }
+      );
+    }
+
     const toolReviews = await reviewsCollection
       .find({ toolId: toolId })
       .toArray();
@@ -148,7 +172,7 @@ export async function PUT(request: NextRequest) {
       toolReviews.reduce((sum, r) => sum + r.rating, 0) / toolReviews.length;
 
     await toolsCollection.updateOne(
-      { _id: toolId },
+      { _id: objectId },
       {
         $set: {
           rating: Math.round(avgRating * 10) / 10,
@@ -197,6 +221,18 @@ export async function DELETE(request: NextRequest) {
 
     // Update tool's average rating
     const toolsCollection = await getToolsCollection();
+
+    // Convert toolId to ObjectId for database query
+    let objectId;
+    try {
+      objectId = new ObjectId(toolId);
+    } catch (error) {
+      return NextResponse.json(
+        { error: "Invalid tool ID format" },
+        { status: 400 }
+      );
+    }
+
     const toolReviews = await reviewsCollection
       .find({ toolId: toolId })
       .toArray();
@@ -205,7 +241,7 @@ export async function DELETE(request: NextRequest) {
       const avgRating =
         toolReviews.reduce((sum, r) => sum + r.rating, 0) / toolReviews.length;
       await toolsCollection.updateOne(
-        { _id: toolId },
+        { _id: objectId },
         {
           $set: {
             rating: Math.round(avgRating * 10) / 10,
@@ -215,7 +251,7 @@ export async function DELETE(request: NextRequest) {
       );
     } else {
       await toolsCollection.updateOne(
-        { _id: toolId },
+        { _id: objectId },
         {
           $set: {
             rating: 0,
