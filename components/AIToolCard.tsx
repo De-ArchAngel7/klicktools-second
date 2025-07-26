@@ -72,6 +72,13 @@ export default function AIToolCard({
 
     setIsLoading(true);
     try {
+      console.log(
+        "Toggling favorite for tool:",
+        tool._id,
+        "Current state:",
+        isFavorited
+      );
+
       const response = await fetch("/api/favorites", {
         method: isFavorited ? "DELETE" : "POST",
         headers: {
@@ -80,12 +87,21 @@ export default function AIToolCard({
         body: JSON.stringify({ toolId: tool._id }),
       });
 
+      const data = await response.json();
+      console.log("Favorite API response:", response.status, data);
+
       if (response.ok) {
         setIsFavorited(!isFavorited);
         onFavoriteToggle?.(tool._id as string, !isFavorited);
+        // Show success message
+        alert(isFavorited ? "Removed from favorites!" : "Added to favorites!");
+      } else {
+        // Show error message
+        alert("Error: " + (data.error || "Failed to update favorite"));
       }
     } catch (error) {
       console.error("Error toggling favorite:", error);
+      alert("Network error. Please try again.");
     } finally {
       setIsLoading(false);
     }

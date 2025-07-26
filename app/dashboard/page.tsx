@@ -30,6 +30,7 @@ import {
 import { hasRole } from "@/lib/utils";
 import AddToolModal from "@/components/AddToolModal";
 import UserManagement from "@/components/UserManagement";
+import AdminMasterAccess from "@/components/AdminMasterAccess";
 import { Tool as ToolType, Review, Favorite } from "@/types";
 
 interface DashboardStats {
@@ -425,6 +426,7 @@ export default function Dashboard() {
               ? [
                   { id: "admin", label: "Admin", icon: Activity },
                   { id: "users", label: "Users", icon: Shield },
+                  { id: "master", label: "Master Access", icon: Users },
                 ]
               : []),
           ].map((tab) => {
@@ -1044,6 +1046,16 @@ export default function Dashboard() {
               className="space-y-8"
             >
               <UserManagement />
+            </motion.div>
+          )}
+
+          {activeTab === "master" && isAdmin && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-8"
+            >
+              <AdminMasterAccess />
             </motion.div>
           )}
         </div>

@@ -22,6 +22,10 @@ export default function ReviewModal({
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [existingReview, setExistingReview] = useState<any>(null);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   useEffect(() => {
     if (isOpen && tool && session?.user?.email) {
@@ -53,10 +57,13 @@ export default function ReviewModal({
 
   const handleSubmit = async () => {
     if (!tool || !session?.user?.email || rating === 0) {
+      setMessage({ type: "error", text: "Please select a rating" });
       return;
     }
 
     setIsSubmitting(true);
+    setMessage(null);
+
     try {
       const response = await fetch("/api/reviews", {
         method: existingReview ? "PUT" : "POST",
@@ -70,12 +77,27 @@ export default function ReviewModal({
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        onClose();
-        // Optionally refresh the tool data or show success message
+        setMessage({
+          type: "success",
+          text: existingReview
+            ? "Review updated successfully!"
+            : "Review added successfully!",
+        });
+        setTimeout(() => {
+          onClose();
+        }, 1500);
+      } else {
+        setMessage({
+          type: "error",
+          text: data.error || "Failed to submit review",
+        });
       }
     } catch (error) {
       console.error("Error submitting review:", error);
+      setMessage({ type: "error", text: "Network error. Please try again." });
     } finally {
       setIsSubmitting(false);
     }
@@ -83,10 +105,13 @@ export default function ReviewModal({
 
   const handleDelete = async () => {
     if (!tool || !session?.user?.email) {
+      setMessage({ type: "error", text: "Authentication required" });
       return;
     }
 
     setIsSubmitting(true);
+    setMessage(null);
+
     try {
       const response = await fetch("/api/reviews", {
         method: "DELETE",
@@ -98,14 +123,25 @@ export default function ReviewModal({
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        onClose();
+        setMessage({ type: "success", text: "Review deleted successfully!" });
         setExistingReview(null);
         setRating(0);
         setComment("");
+        setTimeout(() => {
+          onClose();
+        }, 1500);
+      } else {
+        setMessage({
+          type: "error",
+          text: data.error || "Failed to delete review",
+        });
       }
     } catch (error) {
       console.error("Error deleting review:", error);
+      setMessage({ type: "error", text: "Network error. Please try again." });
     } finally {
       setIsSubmitting(false);
     }
@@ -162,6 +198,21 @@ export default function ReviewModal({
                 </button>
               </div>
             </div>
+
+            {/* Toast Message */}
+            {message && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`mx-6 mt-4 p-3 rounded-lg text-sm ${
+                  message.type === "success"
+                    ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                    : "bg-red-500/20 text-red-400 border border-red-500/30"
+                }`}
+              >
+                {message.text}
+              </motion.div>
+            )}
 
             {/* Content */}
             <div className="p-6 space-y-6">

@@ -18,6 +18,7 @@ export default function OnboardingScreen({
   onComplete,
 }: OnboardingScreenProps) {
   const [showText, setShowText] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const particlesRef = useRef<HTMLDivElement[]>([]);
@@ -25,7 +26,15 @@ export default function OnboardingScreen({
   const subtitleRef = useRef<HTMLDivElement>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
 
+  // Ensure component only renders on client side
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    // Only run animations on client side
+    if (!isClient) return;
+
     // Check if all refs are available
     if (
       !containerRef.current ||
@@ -183,7 +192,7 @@ export default function OnboardingScreen({
     return () => {
       tl.kill();
     };
-  }, []);
+  }, [isClient]);
 
   const handleClick = () => {
     // Exit animation
@@ -231,125 +240,133 @@ export default function OnboardingScreen({
   };
 
   return (
-    <motion.div
-      ref={containerRef}
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={handleClick}
-    >
-      {/* AI City Skyline Background Image */}
-      <div ref={backgroundRef} className="absolute inset-0 onboarding-bg">
-        {/* Overlay to ensure text readability */}
-        <div className="absolute inset-0 bg-black/40" />
-      </div>
-
-      {/* Matrix Rain Effect */}
-      <div className="matrix-rain absolute inset-0 overflow-hidden">
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={i}
-            className={`matrix-char animation-delay-${Math.floor(
-              Math.random() * 6
-            )}`}
-          >
-            {String.fromCharCode(0x30a0 + Math.random() * 96)}
+    <>
+      {!isClient ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
+          <div className="text-white">Loading...</div>
+        </div>
+      ) : (
+        <motion.div
+          ref={containerRef}
+          className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={handleClick}
+        >
+          {/* AI City Skyline Background Image */}
+          <div ref={backgroundRef} className="absolute inset-0 onboarding-bg">
+            {/* Overlay to ensure text readability */}
+            <div className="absolute inset-0 bg-black/40" />
           </div>
-        ))}
-      </div>
 
-      {/* Animated Sparkles */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(30)].map((_, i) => (
-          <div
-            key={i}
-            ref={(el) => {
-              if (el) particlesRef.current[i] = el;
-            }}
-            className={`particle w-2 h-2 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full particle-${
-              i + 1
-            }`}
-          />
-        ))}
-      </div>
-
-      {/* Glowing Orbs */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={i}
-            className={`glow-orb w-40 h-40 bg-gradient-to-r from-cyan-400/20 to-purple-500/20 rounded-full blur-xl glow-orb-${
-              i + 1
-            }`}
-          />
-        ))}
-      </div>
-
-      {/* Audio Element */}
-      <audio ref={audioRef} preload="auto">
-        <source src="/sounds/intro.mp3" type="audio/mpeg" />
-      </audio>
-
-      {/* Content */}
-      <div className="relative z-10 text-center px-6">
-        <motion.div className="mb-8 relative">
-          <h1
-            ref={titleRef}
-            className="text-6xl md:text-8xl font-bold gradient-text text-shadow mb-4 relative z-10"
-          >
-            KlickTools
-          </h1>
-          {/* Enhanced glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/30 to-purple-500/30 blur-3xl -z-10 animate-pulse" />
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 to-blue-500/20 blur-2xl -z-20 animate-pulse animation-delay-5" />
-        </motion.div>
-
-        <AnimatePresence>
-          {showText && (
-            <motion.div ref={subtitleRef} className="mb-8">
-              <div className="typing-animation text-2xl md:text-3xl font-medium text-white max-w-4xl mx-auto">
-                Welcome to KlickTools — Find the smartest tools on the web
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 6, duration: 1 }}
-          className="text-lg text-cyan-300/90 font-medium"
-        >
-          Click anywhere to continue
-        </motion.div>
-
-        {/* Enhanced loading indicator with cyan theme */}
-        <motion.div
-          className="mt-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 5, duration: 1 }}
-        >
-          <div className="flex justify-center space-x-2">
-            {[0, 1, 2].map((i) => (
-              <motion.div
+          {/* Matrix Rain Effect */}
+          <div className="matrix-rain absolute inset-0 overflow-hidden">
+            {[...Array(50)].map((_, i) => (
+              <div
                 key={i}
-                className="w-3 h-3 bg-cyan-400 rounded-full cyan-loading-dot"
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.5, 1, 0.5],
+                className={`matrix-char animation-delay-${Math.floor(
+                  Math.random() * 6
+                )}`}
+              >
+                {String.fromCharCode(0x30a0 + Math.random() * 96)}
+              </div>
+            ))}
+          </div>
+
+          {/* Animated Sparkles */}
+          <div className="absolute inset-0 overflow-hidden">
+            {[...Array(30)].map((_, i) => (
+              <div
+                key={i}
+                ref={(el) => {
+                  if (el) particlesRef.current[i] = el;
                 }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  delay: i * 0.2,
-                }}
+                className={`particle w-2 h-2 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full particle-${
+                  i + 1
+                }`}
               />
             ))}
           </div>
+
+          {/* Glowing Orbs */}
+          <div className="absolute inset-0 overflow-hidden">
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={i}
+                className={`glow-orb w-40 h-40 bg-gradient-to-r from-cyan-400/20 to-purple-500/20 rounded-full blur-xl glow-orb-${
+                  i + 1
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Audio Element */}
+          <audio ref={audioRef} preload="auto">
+            <source src="/sounds/intro.mp3" type="audio/mpeg" />
+          </audio>
+
+          {/* Content */}
+          <div className="relative z-10 text-center px-6">
+            <motion.div className="mb-8 relative">
+              <h1
+                ref={titleRef}
+                className="text-6xl md:text-8xl font-bold gradient-text text-shadow mb-4 relative z-10"
+              >
+                KlickTools
+              </h1>
+              {/* Enhanced glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/30 to-purple-500/30 blur-3xl -z-10 animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 to-blue-500/20 blur-2xl -z-20 animate-pulse animation-delay-5" />
+            </motion.div>
+
+            <AnimatePresence>
+              {showText && (
+                <motion.div ref={subtitleRef} className="mb-8">
+                  <div className="typing-animation text-2xl md:text-3xl font-medium text-white max-w-4xl mx-auto">
+                    Welcome to KlickTools — Find the smartest tools on the web
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 6, duration: 1 }}
+              className="text-lg text-cyan-300/90 font-medium"
+            >
+              Click anywhere to continue
+            </motion.div>
+
+            {/* Enhanced loading indicator with cyan theme */}
+            <motion.div
+              className="mt-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 5, duration: 1 }}
+            >
+              <div className="flex justify-center space-x-2">
+                {[0, 1, 2].map((i) => (
+                  <motion.div
+                    key={i}
+                    className="w-3 h-3 bg-cyan-400 rounded-full cyan-loading-dot"
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      opacity: [0.5, 1, 0.5],
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      delay: i * 0.2,
+                    }}
+                  />
+                ))}
+              </div>
+            </motion.div>
+          </div>
         </motion.div>
-      </div>
-    </motion.div>
+      )}
+    </>
   );
 }
