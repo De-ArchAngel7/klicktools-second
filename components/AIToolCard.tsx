@@ -6,6 +6,7 @@ import { Heart, Star, MessageSquare, ExternalLink, Eye } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { Tool } from "@/types";
 import ReviewModal from "./ReviewModal";
+import AuthModal from "./AuthModal";
 
 interface AIToolCardProps {
   tool: Tool;
@@ -21,6 +22,10 @@ export default function AIToolCard({
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState(0);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authAction, setAuthAction] = useState<"favorite" | "review">(
+    "favorite"
+  );
 
   useEffect(() => {
     if (session?.user?.email) {
@@ -59,10 +64,9 @@ export default function AIToolCard({
 
   const handleFavoriteToggle = async () => {
     if (!session?.user?.email) {
-      // Redirect to sign in page
-      window.location.href =
-        "/auth/signin?callbackUrl=" +
-        encodeURIComponent(window.location.pathname);
+      // Show auth modal instead of redirecting
+      setAuthAction("favorite");
+      setShowAuthModal(true);
       return;
     }
 
@@ -199,10 +203,9 @@ export default function AIToolCard({
                 whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   if (!session?.user?.email) {
-                    // Redirect to sign in page
-                    window.location.href =
-                      "/auth/signin?callbackUrl=" +
-                      encodeURIComponent(window.location.pathname);
+                    // Show auth modal instead of redirecting
+                    setAuthAction("review");
+                    setShowAuthModal(true);
                     return;
                   }
                   setShowReviewModal(true);
@@ -359,6 +362,14 @@ export default function AIToolCard({
         isOpen={showReviewModal}
         onClose={() => setShowReviewModal(false)}
         tool={tool}
+      />
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        action={authAction}
+        toolName={tool.name}
       />
     </>
   );

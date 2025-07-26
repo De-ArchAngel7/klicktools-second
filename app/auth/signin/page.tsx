@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { signIn, getSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Mail, Lock, Github, Chrome } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Github, Chrome, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function SignIn() {
@@ -63,6 +63,17 @@ export default function SignIn() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
+        {/* Back to Home Button */}
+        <div className="mb-4">
+          <a
+            href="/"
+            className="inline-flex items-center space-x-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg text-white hover:bg-white/20 transition-all duration-200"
+          >
+            <Home className="w-4 h-4" />
+            <span>Back to Home</span>
+          </a>
+        </div>
+
         <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 shadow-2xl">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
