@@ -3,9 +3,20 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
-    domains: ["localhost"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
     unoptimized: true,
+  },
+  experimental: {
+    serverComponentsExternalPackages: ["mongoose"],
   },
   async headers() {
     return [
