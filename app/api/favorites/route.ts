@@ -22,7 +22,19 @@ export async function POST(request: NextRequest) {
     }
 
     const toolsCollection = await getToolsCollection();
-    const tool = await toolsCollection.findOne({ _id: toolId });
+
+    // Convert toolId to ObjectId for database query
+    let objectId;
+    try {
+      objectId = new ObjectId(toolId);
+    } catch (error) {
+      return NextResponse.json(
+        { error: "Invalid tool ID format" },
+        { status: 400 }
+      );
+    }
+
+    const tool = await toolsCollection.findOne({ _id: objectId });
 
     if (!tool) {
       return NextResponse.json({ error: "Tool not found" }, { status: 404 });
