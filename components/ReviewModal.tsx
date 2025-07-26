@@ -56,7 +56,12 @@ export default function ReviewModal({
   };
 
   const handleSubmit = async () => {
-    if (!tool || !session?.user?.email || rating === 0) {
+    if (!tool || !session?.user?.email) {
+      setMessage({ type: "error", text: "Authentication required" });
+      return;
+    }
+
+    if (rating === 0) {
       setMessage({ type: "error", text: "Please select a rating" });
       return;
     }

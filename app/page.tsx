@@ -13,7 +13,7 @@ import {
   X,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
-import AIToolCard from "@/components/AIToolCard";
+import GlassmorphicCard from "@/components/GlassmorphicCard";
 import ReviewModal from "@/components/ReviewModal";
 import OnboardingScreen from "@/components/OnboardingScreen";
 import { Tool } from "@/types";
@@ -450,7 +450,7 @@ export default function Home() {
                   ) : searchResults.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {searchResults.map((tool) => (
-                        <AIToolCard
+                        <GlassmorphicCard
                           key={tool._id}
                           tool={tool}
                           onFavoriteToggle={handleFavoriteToggle}
@@ -696,7 +696,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <AIToolCard
+                <GlassmorphicCard
                   tool={tool}
                   onFavoriteToggle={handleFavoriteToggle}
                 />
