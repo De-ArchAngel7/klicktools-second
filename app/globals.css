@@ -1000,6 +1000,529 @@ body {
   }
 }
 
+/* Floating Shapes Animation */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px) rotate(90deg);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-10px) translateX(-15px) rotate(180deg);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translateY(15px) translateX(5px) rotate(270deg);
+    opacity: 0.7;
+  }
+}
+
+.floating-shape-1 {
+  animation: float 6s ease-in-out infinite;
+}
+.floating-shape-2 {
+  animation: float 8s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+.floating-shape-3 {
+  animation: float 7s ease-in-out infinite;
+  animation-delay: 1s;
+}
+.floating-shape-4 {
+  animation: float 9s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+.floating-shape-5 {
+  animation: float 6.5s ease-in-out infinite;
+  animation-delay: 2s;
+}
+.floating-shape-6 {
+  animation: float 7.5s ease-in-out infinite;
+  animation-delay: 2.5s;
+}
+.floating-shape-7 {
+  animation: float 8.5s ease-in-out infinite;
+  animation-delay: 3s;
+}
+.floating-shape-8 {
+  animation: float 6.8s ease-in-out infinite;
+  animation-delay: 3.5s;
+}
+.floating-shape-9 {
+  animation: float 7.2s ease-in-out infinite;
+  animation-delay: 4s;
+}
+.floating-shape-10 {
+  animation: float 8.2s ease-in-out infinite;
+  animation-delay: 4.5s;
+}
+.floating-shape-11 {
+  animation: float 6.3s ease-in-out infinite;
+  animation-delay: 5s;
+}
+.floating-shape-12 {
+  animation: float 7.8s ease-in-out infinite;
+  animation-delay: 5.5s;
+}
+.floating-shape-13 {
+  animation: float 8.8s ease-in-out infinite;
+  animation-delay: 6s;
+}
+.floating-shape-14 {
+  animation: float 6.7s ease-in-out infinite;
+  animation-delay: 6.5s;
+}
+.floating-shape-15 {
+  animation: float 7.3s ease-in-out infinite;
+  animation-delay: 7s;
+}
+.floating-shape-16 {
+  animation: float 8.7s ease-in-out infinite;
+  animation-delay: 7.5s;
+}
+.floating-shape-17 {
+  animation: float 6.9s ease-in-out infinite;
+  animation-delay: 8s;
+}
+.floating-shape-18 {
+  animation: float 7.6s ease-in-out infinite;
+  animation-delay: 8.5s;
+}
+.floating-shape-19 {
+  animation: float 8.3s ease-in-out infinite;
+  animation-delay: 9s;
+}
+.floating-shape-20 {
+  animation: float 6.4s ease-in-out infinite;
+  animation-delay: 9.5s;
+}
+
+/* Enhanced Particle Animations */
+@keyframes particleFloat {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translateY(-30px) translateX(15px) scale(1.2);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-15px) translateX(-25px) scale(0.8);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translateY(25px) translateX(8px) scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+.particle-1 {
+  animation: particleFloat 8s ease-in-out infinite;
+}
+.particle-2 {
+  animation: particleFloat 9s ease-in-out infinite;
+  animation-delay: 0.2s;
+}
+.particle-3 {
+  animation: particleFloat 7.5s ease-in-out infinite;
+  animation-delay: 0.4s;
+}
+.particle-4 {
+  animation: particleFloat 8.5s ease-in-out infinite;
+  animation-delay: 0.6s;
+}
+.particle-5 {
+  animation: particleFloat 7s ease-in-out infinite;
+  animation-delay: 0.8s;
+}
+.particle-6 {
+  animation: particleFloat 9.5s ease-in-out infinite;
+  animation-delay: 1s;
+}
+.particle-7 {
+  animation: particleFloat 8.2s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+.particle-8 {
+  animation: particleFloat 7.8s ease-in-out infinite;
+  animation-delay: 1.4s;
+}
+.particle-9 {
+  animation: particleFloat 8.8s ease-in-out infinite;
+  animation-delay: 1.6s;
+}
+.particle-10 {
+  animation: particleFloat 7.3s ease-in-out infinite;
+  animation-delay: 1.8s;
+}
+.particle-11 {
+  animation: particleFloat 9.2s ease-in-out infinite;
+  animation-delay: 2s;
+}
+.particle-12 {
+  animation: particleFloat 8.1s ease-in-out infinite;
+  animation-delay: 2.2s;
+}
+.particle-13 {
+  animation: particleFloat 7.7s ease-in-out infinite;
+  animation-delay: 2.4s;
+}
+.particle-14 {
+  animation: particleFloat 8.9s ease-in-out infinite;
+  animation-delay: 2.6s;
+}
+.particle-15 {
+  animation: particleFloat 7.4s ease-in-out infinite;
+  animation-delay: 2.8s;
+}
+.particle-16 {
+  animation: particleFloat 9.1s ease-in-out infinite;
+  animation-delay: 3s;
+}
+.particle-17 {
+  animation: particleFloat 8.3s ease-in-out infinite;
+  animation-delay: 3.2s;
+}
+.particle-18 {
+  animation: particleFloat 7.6s ease-in-out infinite;
+  animation-delay: 3.4s;
+}
+.particle-19 {
+  animation: particleFloat 8.7s ease-in-out infinite;
+  animation-delay: 3.6s;
+}
+.particle-20 {
+  animation: particleFloat 7.9s ease-in-out infinite;
+  animation-delay: 3.8s;
+}
+.particle-21 {
+  animation: particleFloat 9.3s ease-in-out infinite;
+  animation-delay: 4s;
+}
+.particle-22 {
+  animation: particleFloat 8.4s ease-in-out infinite;
+  animation-delay: 4.2s;
+}
+.particle-23 {
+  animation: particleFloat 7.2s ease-in-out infinite;
+  animation-delay: 4.4s;
+}
+.particle-24 {
+  animation: particleFloat 8.6s ease-in-out infinite;
+  animation-delay: 4.6s;
+}
+.particle-25 {
+  animation: particleFloat 7.5s ease-in-out infinite;
+  animation-delay: 4.8s;
+}
+.particle-26 {
+  animation: particleFloat 9.4s ease-in-out infinite;
+  animation-delay: 5s;
+}
+.particle-27 {
+  animation: particleFloat 8.5s ease-in-out infinite;
+  animation-delay: 5.2s;
+}
+.particle-28 {
+  animation: particleFloat 7.8s ease-in-out infinite;
+  animation-delay: 5.4s;
+}
+.particle-29 {
+  animation: particleFloat 8.8s ease-in-out infinite;
+  animation-delay: 5.6s;
+}
+.particle-30 {
+  animation: particleFloat 7.3s ease-in-out infinite;
+  animation-delay: 5.8s;
+}
+.particle-31 {
+  animation: particleFloat 9.1s ease-in-out infinite;
+  animation-delay: 6s;
+}
+.particle-32 {
+  animation: particleFloat 8.2s ease-in-out infinite;
+  animation-delay: 6.2s;
+}
+.particle-33 {
+  animation: particleFloat 7.7s ease-in-out infinite;
+  animation-delay: 6.4s;
+}
+.particle-34 {
+  animation: particleFloat 8.9s ease-in-out infinite;
+  animation-delay: 6.6s;
+}
+.particle-35 {
+  animation: particleFloat 7.4s ease-in-out infinite;
+  animation-delay: 6.8s;
+}
+.particle-36 {
+  animation: particleFloat 9.2s ease-in-out infinite;
+  animation-delay: 7s;
+}
+.particle-37 {
+  animation: particleFloat 8.3s ease-in-out infinite;
+  animation-delay: 7.2s;
+}
+.particle-38 {
+  animation: particleFloat 7.6s ease-in-out infinite;
+  animation-delay: 7.4s;
+}
+.particle-39 {
+  animation: particleFloat 8.7s ease-in-out infinite;
+  animation-delay: 7.6s;
+}
+.particle-40 {
+  animation: particleFloat 7.9s ease-in-out infinite;
+  animation-delay: 7.8s;
+}
+.particle-41 {
+  animation: particleFloat 9.3s ease-in-out infinite;
+  animation-delay: 8s;
+}
+.particle-42 {
+  animation: particleFloat 8.4s ease-in-out infinite;
+  animation-delay: 8.2s;
+}
+.particle-43 {
+  animation: particleFloat 7.2s ease-in-out infinite;
+  animation-delay: 8.4s;
+}
+.particle-44 {
+  animation: particleFloat 8.6s ease-in-out infinite;
+  animation-delay: 8.6s;
+}
+.particle-45 {
+  animation: particleFloat 7.5s ease-in-out infinite;
+  animation-delay: 8.8s;
+}
+.particle-46 {
+  animation: particleFloat 9.4s ease-in-out infinite;
+  animation-delay: 9s;
+}
+.particle-47 {
+  animation: particleFloat 8.5s ease-in-out infinite;
+  animation-delay: 9.2s;
+}
+.particle-48 {
+  animation: particleFloat 7.8s ease-in-out infinite;
+  animation-delay: 9.4s;
+}
+.particle-49 {
+  animation: particleFloat 8.8s ease-in-out infinite;
+  animation-delay: 9.6s;
+}
+.particle-50 {
+  animation: particleFloat 7.3s ease-in-out infinite;
+  animation-delay: 9.8s;
+}
+.particle-51 {
+  animation: particleFloat 9.1s ease-in-out infinite;
+  animation-delay: 10s;
+}
+.particle-52 {
+  animation: particleFloat 8.2s ease-in-out infinite;
+  animation-delay: 10.2s;
+}
+.particle-53 {
+  animation: particleFloat 7.7s ease-in-out infinite;
+  animation-delay: 10.4s;
+}
+.particle-54 {
+  animation: particleFloat 8.9s ease-in-out infinite;
+  animation-delay: 10.6s;
+}
+.particle-55 {
+  animation: particleFloat 7.4s ease-in-out infinite;
+  animation-delay: 10.8s;
+}
+.particle-56 {
+  animation: particleFloat 9.2s ease-in-out infinite;
+  animation-delay: 11s;
+}
+.particle-57 {
+  animation: particleFloat 8.3s ease-in-out infinite;
+  animation-delay: 11.2s;
+}
+.particle-58 {
+  animation: particleFloat 7.6s ease-in-out infinite;
+  animation-delay: 11.4s;
+}
+.particle-59 {
+  animation: particleFloat 8.7s ease-in-out infinite;
+  animation-delay: 11.6s;
+}
+.particle-60 {
+  animation: particleFloat 7.9s ease-in-out infinite;
+  animation-delay: 11.8s;
+}
+.particle-61 {
+  animation: particleFloat 9.3s ease-in-out infinite;
+  animation-delay: 12s;
+}
+.particle-62 {
+  animation: particleFloat 8.4s ease-in-out infinite;
+  animation-delay: 12.2s;
+}
+.particle-63 {
+  animation: particleFloat 7.2s ease-in-out infinite;
+  animation-delay: 12.4s;
+}
+.particle-64 {
+  animation: particleFloat 8.6s ease-in-out infinite;
+  animation-delay: 12.6s;
+}
+.particle-65 {
+  animation: particleFloat 7.5s ease-in-out infinite;
+  animation-delay: 12.8s;
+}
+.particle-66 {
+  animation: particleFloat 9.4s ease-in-out infinite;
+  animation-delay: 13s;
+}
+.particle-67 {
+  animation: particleFloat 8.5s ease-in-out infinite;
+  animation-delay: 13.2s;
+}
+.particle-68 {
+  animation: particleFloat 7.8s ease-in-out infinite;
+  animation-delay: 13.4s;
+}
+.particle-69 {
+  animation: particleFloat 8.8s ease-in-out infinite;
+  animation-delay: 13.6s;
+}
+.particle-70 {
+  animation: particleFloat 7.3s ease-in-out infinite;
+  animation-delay: 13.8s;
+}
+.particle-71 {
+  animation: particleFloat 9.1s ease-in-out infinite;
+  animation-delay: 14s;
+}
+.particle-72 {
+  animation: particleFloat 8.2s ease-in-out infinite;
+  animation-delay: 14.2s;
+}
+.particle-73 {
+  animation: particleFloat 7.7s ease-in-out infinite;
+  animation-delay: 14.4s;
+}
+.particle-74 {
+  animation: particleFloat 8.9s ease-in-out infinite;
+  animation-delay: 14.6s;
+}
+.particle-75 {
+  animation: particleFloat 7.4s ease-in-out infinite;
+  animation-delay: 14.8s;
+}
+.particle-76 {
+  animation: particleFloat 9.2s ease-in-out infinite;
+  animation-delay: 15s;
+}
+.particle-77 {
+  animation: particleFloat 8.3s ease-in-out infinite;
+  animation-delay: 15.2s;
+}
+.particle-78 {
+  animation: particleFloat 7.6s ease-in-out infinite;
+  animation-delay: 15.4s;
+}
+.particle-79 {
+  animation: particleFloat 8.7s ease-in-out infinite;
+  animation-delay: 15.6s;
+}
+.particle-80 {
+  animation: particleFloat 7.9s ease-in-out infinite;
+  animation-delay: 15.8s;
+}
+
+/* Enhanced Orb Animations */
+@keyframes orbFloat {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+    opacity: 0.2;
+  }
+  25% {
+    transform: translateY(-40px) translateX(20px) scale(1.3);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-20px) translateX(-30px) scale(0.7);
+    opacity: 0.1;
+  }
+  75% {
+    transform: translateY(30px) translateX(15px) scale(1.1);
+    opacity: 0.3;
+  }
+}
+
+.glow-orb-1 {
+  animation: orbFloat 12s ease-in-out infinite;
+}
+.glow-orb-2 {
+  animation: orbFloat 14s ease-in-out infinite;
+  animation-delay: 0.8s;
+}
+.glow-orb-3 {
+  animation: orbFloat 11s ease-in-out infinite;
+  animation-delay: 1.6s;
+}
+.glow-orb-4 {
+  animation: orbFloat 13s ease-in-out infinite;
+  animation-delay: 2.4s;
+}
+.glow-orb-5 {
+  animation: orbFloat 10s ease-in-out infinite;
+  animation-delay: 3.2s;
+}
+.glow-orb-6 {
+  animation: orbFloat 15s ease-in-out infinite;
+  animation-delay: 4s;
+}
+.glow-orb-7 {
+  animation: orbFloat 12.5s ease-in-out infinite;
+  animation-delay: 4.8s;
+}
+.glow-orb-8 {
+  animation: orbFloat 11.5s ease-in-out infinite;
+  animation-delay: 5.6s;
+}
+.glow-orb-9 {
+  animation: orbFloat 13.5s ease-in-out infinite;
+  animation-delay: 6.4s;
+}
+.glow-orb-10 {
+  animation: orbFloat 10.5s ease-in-out infinite;
+  animation-delay: 7.2s;
+}
+.glow-orb-11 {
+  animation: orbFloat 14.5s ease-in-out infinite;
+  animation-delay: 8s;
+}
+.glow-orb-12 {
+  animation: orbFloat 11.8s ease-in-out infinite;
+  animation-delay: 8.8s;
+}
+.glow-orb-13 {
+  animation: orbFloat 13.2s ease-in-out infinite;
+  animation-delay: 9.6s;
+}
+.glow-orb-14 {
+  animation: orbFloat 10.8s ease-in-out infinite;
+  animation-delay: 10.4s;
+}
+.glow-orb-15 {
+  animation: orbFloat 14.2s ease-in-out infinite;
+  animation-delay: 11.2s;
+}
+
 /* Mobile-specific utilities */
 @media (max-width: 640px) {
   .mobile-text-sm {
@@ -1509,4 +2032,163 @@ select option:checked {
     opacity: 1;
     transform: scale(1);
   }
+}
+
+/* Particle and Orb Positioning Classes */
+.particle-position-0 {
+  left: 10%;
+  top: 15%;
+}
+.particle-position-1 {
+  left: 25%;
+  top: 35%;
+}
+.particle-position-2 {
+  left: 45%;
+  top: 20%;
+}
+.particle-position-3 {
+  left: 65%;
+  top: 45%;
+}
+.particle-position-4 {
+  left: 85%;
+  top: 25%;
+}
+.particle-position-5 {
+  left: 15%;
+  top: 65%;
+}
+.particle-position-6 {
+  left: 35%;
+  top: 80%;
+}
+.particle-position-7 {
+  left: 55%;
+  top: 70%;
+}
+.particle-position-8 {
+  left: 75%;
+  top: 85%;
+}
+.particle-position-9 {
+  left: 90%;
+  top: 75%;
+}
+
+.orb-position-0 {
+  left: 20%;
+  top: 30%;
+}
+.orb-position-1 {
+  left: 40%;
+  top: 15%;
+}
+.orb-position-2 {
+  left: 60%;
+  top: 40%;
+}
+.orb-position-3 {
+  left: 80%;
+  top: 20%;
+}
+.orb-position-4 {
+  left: 30%;
+  top: 70%;
+}
+.orb-position-5 {
+  left: 70%;
+  top: 80%;
+}
+
+/* Enhanced Onboarding Text Styles */
+.onboarding-title {
+  text-shadow: 0 0 30px rgba(34, 211, 238, 0.8),
+    0 0 60px rgba(34, 211, 238, 0.6), 0 0 90px rgba(34, 211, 238, 0.4);
+}
+
+.onboarding-subtitle {
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Floating Shape Positioning Classes */
+.floating-shape-1 {
+  left: 10%;
+  top: 15%;
+}
+.floating-shape-2 {
+  left: 25%;
+  top: 35%;
+}
+.floating-shape-3 {
+  left: 40%;
+  top: 55%;
+}
+.floating-shape-4 {
+  left: 55%;
+  top: 25%;
+}
+.floating-shape-5 {
+  left: 70%;
+  top: 45%;
+}
+.floating-shape-6 {
+  left: 85%;
+  top: 65%;
+}
+.floating-shape-7 {
+  left: 15%;
+  top: 75%;
+}
+.floating-shape-8 {
+  left: 30%;
+  top: 85%;
+}
+.floating-shape-9 {
+  left: 45%;
+  top: 95%;
+}
+.floating-shape-10 {
+  left: 60%;
+  top: 5%;
+}
+.floating-shape-11 {
+  left: 75%;
+  top: 15%;
+}
+.floating-shape-12 {
+  left: 90%;
+  top: 25%;
+}
+.floating-shape-13 {
+  left: 5%;
+  top: 35%;
+}
+.floating-shape-14 {
+  left: 20%;
+  top: 45%;
+}
+.floating-shape-15 {
+  left: 35%;
+  top: 55%;
+}
+.floating-shape-16 {
+  left: 50%;
+  top: 65%;
+}
+.floating-shape-17 {
+  left: 65%;
+  top: 75%;
+}
+.floating-shape-18 {
+  left: 80%;
+  top: 85%;
+}
+.floating-shape-19 {
+  left: 95%;
+  top: 95%;
+}
+.floating-shape-20 {
+  left: 10%;
+  top: 5%;
 }

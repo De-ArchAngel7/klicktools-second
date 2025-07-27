@@ -12,6 +12,7 @@ import {
   X,
   Sun,
   Moon,
+  Monitor,
 } from "lucide-react";
 import DarkModeToggle from "./DarkModeToggle";
 
@@ -23,7 +24,10 @@ export default function Navbar({ onShowOnboarding }: NavbarProps) {
   const { data: session, status } = useSession();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [themeMode, setThemeMode] = useState<"light" | "dark" | "system">(
+    "system"
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,19 +39,57 @@ export default function Navbar({ onShowOnboarding }: NavbarProps) {
       setIsDarkMode(isDark);
     };
 
+    const checkSystemTheme = () => {
+      if (themeMode === "system") {
+        const systemPrefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        if (systemPrefersDark) {
+          document.documentElement.classList.add("dark");
+          setIsDarkMode(true);
+        } else {
+          document.documentElement.classList.remove("dark");
+          setIsDarkMode(false);
+        }
+      }
+    };
+
+    // Initialize theme based on system preference
+    const initializeTheme = () => {
+      if (themeMode === "system") {
+        const systemPrefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        if (systemPrefersDark) {
+          document.documentElement.classList.add("dark");
+          setIsDarkMode(true);
+        } else {
+          document.documentElement.classList.remove("dark");
+          setIsDarkMode(false);
+        }
+      }
+    };
+
+    initializeTheme();
     checkDarkMode();
+
     const observer = new MutationObserver(checkDarkMode);
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
     });
 
+    // Listen for system theme changes
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    mediaQuery.addEventListener("change", checkSystemTheme);
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
       observer.disconnect();
+      mediaQuery.removeEventListener("change", checkSystemTheme);
     };
-  }, []);
+  }, [themeMode]);
 
   const handleSignIn = () => {
     signIn();
@@ -57,12 +99,29 @@ export default function Navbar({ onShowOnboarding }: NavbarProps) {
     signOut({ callbackUrl: "/" });
   };
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    if (isDarkMode) {
-      document.documentElement.classList.remove("dark");
-    } else {
+  const setLightMode = () => {
+    setThemeMode("light");
+    document.documentElement.classList.remove("dark");
+    setIsDarkMode(false);
+  };
+
+  const setDarkMode = () => {
+    setThemeMode("dark");
+    document.documentElement.classList.add("dark");
+    setIsDarkMode(true);
+  };
+
+  const setSystemMode = () => {
+    setThemeMode("system");
+    const systemPrefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    if (systemPrefersDark) {
       document.documentElement.classList.add("dark");
+      setIsDarkMode(true);
+    } else {
+      document.documentElement.classList.remove("dark");
+      setIsDarkMode(false);
     }
   };
 
@@ -132,24 +191,177 @@ export default function Navbar({ onShowOnboarding }: NavbarProps) {
 
           {/* Right Side */}
           <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
-            {/* Dark Mode Toggle */}
-            <button
-              onClick={toggleTheme}
-              className={`p-2 rounded-lg transition-all duration-200 ${
-                isDarkMode
-                  ? "bg-white/10 text-gray-300 hover:bg-white/20 hover:text-cyan-400 border border-white/20"
-                  : "bg-gray-800/20 text-gray-700 hover:bg-gray-800/30 hover:text-blue-600 border border-gray-300/50"
-              }`}
-              title={
-                isDarkMode ? "Switch to light mode" : "Switch to dark mode"
-              }
-            >
-              {isDarkMode ? (
-                <Sun className="w-5 h-5" />
-              ) : (
-                <Moon className="w-5 h-5" />
-              )}
-            </button>
+            {/* Theme Controls - Desktop */}
+            <div className="hidden sm:flex">
+              <div className="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-1 flex items-center space-x-1">
+                {/* Light Mode Button */}
+                <motion.button
+                  onClick={setLightMode}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`relative p-2 rounded-lg transition-all duration-300 ${
+                    themeMode === "light"
+                      ? "bg-yellow-500/30 text-yellow-300 shadow-lg shadow-yellow-500/25"
+                      : "text-gray-300 hover:text-yellow-400 hover:bg-yellow-500/10"
+                  }`}
+                  title="Light mode"
+                >
+                  <Sun className="w-4 h-4" />
+                  {themeMode === "light" && (
+                    <motion.div
+                      layoutId="activeTheme"
+                      className="absolute inset-0 bg-yellow-500/20 rounded-lg border border-yellow-500/40"
+                      initial={false}
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                </motion.button>
+
+                {/* Dark Mode Button */}
+                <motion.button
+                  onClick={setDarkMode}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`relative p-2 rounded-lg transition-all duration-300 ${
+                    themeMode === "dark"
+                      ? "bg-purple-500/30 text-purple-300 shadow-lg shadow-purple-500/25"
+                      : "text-gray-300 hover:text-purple-400 hover:bg-purple-500/10"
+                  }`}
+                  title="Dark mode"
+                >
+                  <Moon className="w-4 h-4" />
+                  {themeMode === "dark" && (
+                    <motion.div
+                      layoutId="activeTheme"
+                      className="absolute inset-0 bg-purple-500/20 rounded-lg border border-purple-500/40"
+                      initial={false}
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                </motion.button>
+
+                {/* System Mode Button */}
+                <motion.button
+                  onClick={setSystemMode}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`relative p-2 rounded-lg transition-all duration-300 ${
+                    themeMode === "system"
+                      ? "bg-cyan-500/30 text-cyan-300 shadow-lg shadow-cyan-500/25"
+                      : "text-gray-300 hover:text-cyan-400 hover:bg-cyan-500/10"
+                  }`}
+                  title="System preference"
+                >
+                  <Monitor className="w-4 h-4" />
+                  {themeMode === "system" && (
+                    <motion.div
+                      layoutId="activeTheme"
+                      className="absolute inset-0 bg-cyan-500/20 rounded-lg border border-cyan-500/40"
+                      initial={false}
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                </motion.button>
+              </div>
+            </div>
+
+            {/* Theme Controls - Mobile */}
+            <div className="sm:hidden">
+              <div className="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-1 flex items-center space-x-1">
+                {/* Light Mode Button */}
+                <motion.button
+                  onClick={setLightMode}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`relative p-1.5 rounded-md transition-all duration-300 ${
+                    themeMode === "light"
+                      ? "bg-yellow-500/30 text-yellow-300 shadow-lg shadow-yellow-500/25"
+                      : "text-gray-300 hover:text-yellow-400 hover:bg-yellow-500/10"
+                  }`}
+                  title="Light mode"
+                >
+                  <Sun className="w-3.5 h-3.5" />
+                  {themeMode === "light" && (
+                    <motion.div
+                      layoutId="activeThemeMobile"
+                      className="absolute inset-0 bg-yellow-500/20 rounded-md border border-yellow-500/40"
+                      initial={false}
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                </motion.button>
+
+                {/* Dark Mode Button */}
+                <motion.button
+                  onClick={setDarkMode}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`relative p-1.5 rounded-md transition-all duration-300 ${
+                    themeMode === "dark"
+                      ? "bg-purple-500/30 text-purple-300 shadow-lg shadow-purple-500/25"
+                      : "text-gray-300 hover:text-purple-400 hover:bg-purple-500/10"
+                  }`}
+                  title="Dark mode"
+                >
+                  <Moon className="w-3.5 h-3.5" />
+                  {themeMode === "dark" && (
+                    <motion.div
+                      layoutId="activeThemeMobile"
+                      className="absolute inset-0 bg-purple-500/20 rounded-md border border-purple-500/40"
+                      initial={false}
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                </motion.button>
+
+                {/* System Mode Button */}
+                <motion.button
+                  onClick={setSystemMode}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`relative p-1.5 rounded-md transition-all duration-300 ${
+                    themeMode === "system"
+                      ? "bg-cyan-500/30 text-cyan-300 shadow-lg shadow-cyan-500/25"
+                      : "text-gray-300 hover:text-cyan-400 hover:bg-cyan-500/10"
+                  }`}
+                  title="System preference"
+                >
+                  <Monitor className="w-3.5 h-3.5" />
+                  {themeMode === "system" && (
+                    <motion.div
+                      layoutId="activeThemeMobile"
+                      className="absolute inset-0 bg-cyan-500/20 rounded-md border border-cyan-500/40"
+                      initial={false}
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                </motion.button>
+              </div>
+            </div>
 
             {/* Search Button */}
             <motion.button
